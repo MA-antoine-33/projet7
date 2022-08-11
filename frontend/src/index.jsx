@@ -5,20 +5,24 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Header from './components/header';
 import Footer from './components/footer';
 import Profil from './pages/profil';
+import Publication from './pages/publication';
 
 import GlobalStyle from './utils/styles/globalStyle';
+
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+    
   <Router>
     <GlobalStyle />
         <Header />
-        <Routes>
-        <Route path="/" element={<Profil />}></Route>
+          <Routes>
+            <Route path="/" element={<Profil />}></Route>
+            <Route path="/publication" element={<Publication />}></Route>
         </Routes>
         <Footer />
-   
   </Router>
   </React.StrictMode>,
 )

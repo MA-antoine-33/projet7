@@ -9,7 +9,6 @@ const StyledGlobalStyle = createGlobalStyle`
         body {
             background-color: ${colors.secondary};
             margin: 0;
-    
 `
 
 function GlobalStyle() {

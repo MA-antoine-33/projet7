@@ -18,7 +18,8 @@ const NavContainer = styled.nav`
   display: flex;
   justify-content: space-around;
   align-items: center;
-  background-color: ${colors.secondary};
+  background: linear-gradient(135deg, ${colors.secondary} 60%, ${colors.primaryBis});
+  border-bottom: 1px solid black;
 `
 
 function Header() {

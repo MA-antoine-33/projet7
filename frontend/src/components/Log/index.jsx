@@ -3,12 +3,18 @@ import { useState } from 'react';
 import SignUp from './signup';
 import SignIn from './signin';
 import styled from 'styled-components';
+import colors from "../../utils/styles/colors";
 
-const CardListChoseAll = styled.ul`
+
+const AllFormDiv = styled.div`
+background: linear-gradient(${colors.secondary}, ${colors.primaryBis});
+border-radius: 15px 0px 0px 15px;
+`
+const ListChoseAll = styled.ul`
     display: flex;
     justify-content: space-around;
 `
-const CardListChoseOne = styled.a`
+const ListChoseOne = styled.a`
     text-decoration: none;
     padding: 15px;
     border: 1px solid black;
@@ -24,26 +30,24 @@ const Login = ( props ) => {
     
 
     const handleModals = (e) => {
-        if (e.target.id === "register") {
+        if (e.target.id === "registrer") {
             setSignInModal(false);
             setSignUpModal(true);
         } else if (e.target.id === "login") {
-            setSignUpModal(false);
             setSignInModal(true);
-        }
+            setSignUpModal(false);
+        };
     };
     return(
-       <div className="connection-form">
-        <div className="form-container">
-            <CardListChoseAll>
-                <CardListChoseOne onClick={handleModals} id="registrer" className={signUpModal ? "active-btn" : null}>S'inscrire</CardListChoseOne>
-                <CardListChoseOne onClick={handleModals} id="login" className={signInModal ? "active-btn" : null}>Se connecter</CardListChoseOne>
-            </CardListChoseAll>
+       <AllFormDiv>
+            <ListChoseAll>
+                <ListChoseOne onClick={handleModals} id="registrer" className={signUpModal ? "active-btn" : null}>S'inscrire</ListChoseOne>
+                <ListChoseOne onClick={handleModals} id="login" className={signInModal ? "active-btn" : null}>Se connecter</ListChoseOne>
+            </ListChoseAll>
             {signUpModal && <SignUp /> }
             {signInModal && <SignIn /> }
-        </div>
-       </div>
+       </AllFormDiv>
     )
-}
+};
 
 export default Login;
