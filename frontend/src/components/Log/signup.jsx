@@ -3,16 +3,16 @@ import styled from 'styled-components';
 import colors from "../../utils/styles/colors";
 
 
-const CardFormAllDivButton = styled.div`
+const FormAllDivButton = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
 `
-const CardFormTitle = styled.h1`
+const FormTitle = styled.h1`
     text-align: center;
 `
 
-const CardFormAllInputDiv = styled.form`
+const FormAllInputDiv = styled.form`
     display: flex;
     flex-direction: column;
     align-items: flex-end;
@@ -21,27 +21,27 @@ const CardFormAllInputDiv = styled.form`
     margin-right: 30px;
 `
 
-const CardFormOneDiv = styled.div`
+const FormOneDiv = styled.div`
     margin-bottom: 20px
 `
 
-const CardFormLabel = styled.label`
+const FormLabel = styled.label`
     margin-right: 10px;
 `
 
-const CardFormInput = styled.input`
+const FormInput = styled.input`
     background-color: ${colors.secondary};
     height: 25px;
     border-radius: 15px;
     &:hover {
-        background-color: white;
+        background-color: ${colors.colorHover};
     }
-    &:active {
+    &:focus {
         background-color: white;
-    }
+    }   
 `
 
-const CardFormButton = styled.button`
+const FormButton = styled.button`
     font-size: 1.2em;
     background-color: ${colors.tertiary};
     color: white;
@@ -57,24 +57,24 @@ const CardFormButton = styled.button`
 const SignUp = () => {
     return(
        <div className="connection-form">
-        <CardFormAllDivButton>
-            <CardFormTitle>Rejoignez la grande communauté de Groupomania</CardFormTitle>
-            <CardFormAllInputDiv action="POST">
-                <CardFormOneDiv>
-                    <CardFormLabel htmlFor="usernameForm">Pseudo</CardFormLabel>
-                    <CardFormInput type="text" id="usernameForm" name="usernameForm" className="formSignUp" placeholder="monPseudo"/>
-                </CardFormOneDiv>
-                <CardFormOneDiv>
-                    <CardFormLabel htmlFor="emailForm">Email</CardFormLabel>
-                    <CardFormInput type="email" id="emailForm" name="emailForm" className="formSignUp" placeholder="email@gmail.com"/>
-                </CardFormOneDiv>
-                <CardFormOneDiv>
-                    <CardFormLabel htmlFor="passwordForm">Mot de passe</CardFormLabel>
-                    <CardFormInput type="password" id="passwordForm" name="passwordForm" className="formSignUp" placeholder="MonMdP25"/>
-                </CardFormOneDiv>
-            </CardFormAllInputDiv>
-            <CardFormButton>S'inscrire</CardFormButton>
-        </CardFormAllDivButton>
+        <FormAllDivButton>
+            <FormTitle>Rejoignez la grande communauté de Groupomania</FormTitle>
+            <FormAllInputDiv action="POST">
+                <FormOneDiv>
+                    <FormLabel htmlFor="usernameForm">Pseudo</FormLabel>
+                    <FormInput type="text" id="usernameFormSignUp" name="usernameForm" className="formSignUp" placeholder=" monPseudo"/>
+                </FormOneDiv>
+                <FormOneDiv>
+                    <FormLabel htmlFor="emailForm">Email</FormLabel>
+                    <FormInput type="email" id="emailFormSignUp" name="emailForm" className="formSignUp" placeholder=" email@gmail.com"/>
+                </FormOneDiv>
+                <FormOneDiv>
+                    <FormLabel htmlFor="passwordForm">Mot de passe</FormLabel>
+                    <FormInput type="password" id="passwordFormSignUp" name="passwordForm" className="formSignUp" placeholder=" MonMdP25"/>
+                </FormOneDiv>
+            </FormAllInputDiv>
+            <FormButton>S'inscrire</FormButton>
+        </FormAllDivButton>
        </div>
     )
 }

@@ -1,5 +1,5 @@
-
 import styled from 'styled-components'
+import colors from '../../utils/styles/colors'
 
 
 const FooterContainer = styled.footer`
@@ -8,6 +8,8 @@ const FooterContainer = styled.footer`
   align-items: center;
   justify-content: center;
   padding-top: 60px;
+  background: linear-gradient(135deg, ${colors.primaryBis} 20%, ${colors.secondary});
+  border-top: 1px solid black;
 `
 
 function Footer() {
@@ -16,7 +18,7 @@ function Footer() {
   return (
     <FooterContainer>
       
-        Changer de mode 
+        Ceci est mon footer
      
     </FooterContainer>
   )

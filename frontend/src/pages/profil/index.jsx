@@ -1,46 +1,46 @@
 import React from "react";
-import Login from "../../components/Log";
+import Login from "../../components/log";
 import styled from 'styled-components';
 import colors from "../../utils/styles/colors";
 
 //import imageConnection from "../../assets/connection.jpg"
 
 
-const CardImage = styled.div`
+const Image = styled.div`
     height: auto;
     width: 350px;
     & img {
-        height: auto;
+        height: 100%;
         width: 350px;
         border-radius: 0px 15px 15px 0px;        
     }
 `
 
-const CardDivAllPage = styled.div`
+const DivAllPage = styled.div`
     display: flex;
     justify-content: center;
-    `
+    margin: 108px;
+`
 
-const CardDivGeneral = styled.div`
+const DivGeneral = styled.div`
     display: flex;
-    flex-direction: row
-    justify-content: space-between;
     border: 1px solid black;
     border-radius: 15px;
-    width: 700px;
+    width: 750px;
     background-color: ${colors.secondary};
     `
 
 const Profil = () => {
     return(
-        <CardDivAllPage className="profil-page">
-            <CardDivGeneral className="log-container">
+        
+        <DivAllPage className="profil-page">            
+            <DivGeneral className="log-container">                
                 <Login signin={false} signup={true}/>
-                <CardImage className="img-container">
+                <Image className="img-container">
                     <img src="./connection.jpg" alt="Une équipe soudé" />
-                </CardImage>
-            </CardDivGeneral>
-        </CardDivAllPage>
+                </Image>
+            </DivGeneral>
+        </DivAllPage>
     )
 }
 
