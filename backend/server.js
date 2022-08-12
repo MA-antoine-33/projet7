@@ -15,8 +15,8 @@ const normalizePort = val => {
   return false;
 };
 
-//Si aucun port n'est déclaré, on écoutera le port 3000
-const port = normalizePort(process.env.PORT || '3000');
+//Si aucun port n'est déclaré, on écoutera le port 4200
+const port = normalizePort(process.env.PORT || '4200');
 app.set('port', port);
 
 

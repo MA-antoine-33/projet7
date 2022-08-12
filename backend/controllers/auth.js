@@ -12,9 +12,7 @@ exports.signup = (req, res, next) => {
     //On récupère le hash et on va créer un nouvel utilisateur
     .then(hash => {
         const user = new User({
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            username: req.body.username,
+            userName: req.body.userName,
             email: req.body.email,
             password: hash,
             admin: false,

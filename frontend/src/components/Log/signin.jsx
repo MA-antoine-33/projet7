@@ -1,6 +1,8 @@
 import React from "react";
 import styled from 'styled-components';
 import colors from "../../utils/styles/colors";
+import { useState} from 'react';
+import axios from "axios";
 
 
 const FormAllDivButton = styled.div`
@@ -11,7 +13,6 @@ const FormAllDivButton = styled.div`
 const FormTitle = styled.h1`
     text-align: center;
 `
-
 const FormAllInputDiv = styled.form`
     display: flex;
     flex-direction: column;
@@ -20,15 +21,12 @@ const FormAllInputDiv = styled.form`
     margin-bottom: 20px;
     margin-right: 30px;
 `
-
 const FormOneDiv = styled.div`
     margin-bottom: 20px
 `
-
 const FormLabel = styled.label`
     margin-right: 10px;
 `
-
 const FormInput = styled.input`
     background-color: ${colors.secondary};
     height: 25px;
@@ -41,37 +39,66 @@ const FormInput = styled.input`
     }      
 
 `
-
-const FormButton = styled.button`
+const FormInputButton = styled.input`
     font-size: 1.2em;
     background-color: ${colors.tertiary};
     color: white;
-    width: 50%;
+    width: auto;
     padding: 15px;
     border-radius: 25px;
     &:hover {
         background-color: white;
         color: black;
-    }
-    
+    } 
 `
 
 const SignIn = () => {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const handleLogin = (e) => {
+        e.preventDefault();
+        const emailError = document.querySelector(".emailError");
+        const passwordError = document.querySelector(".passwordError");
+        axios({
+            method: "post",
+            url: `${process.env.REACT_APP_API_URL}api/auth/login`,
+            data: {
+                email,
+                password,
+            }
+        })
+        .then((res) => {
+            if(res.data.errors) {
+                emailError.innerHTML = res.data.errors.email;
+                passwordError.innerHTML = res.data.errors.password;
+            } else {
+                window.location = '/publication'
+            }
+        })
+        .catch((err) => {console.log(err)});
+    };
+
     return(
        <div className="connection-form">
         <FormAllDivButton>
             <FormTitle>Se connecter pour discuter avec ses collègues</FormTitle>
-            <FormAllInputDiv action="POST">
+            <FormAllInputDiv action="" onSubmit={handleLogin} id="signInForm" >
                 <FormOneDiv>
                     <FormLabel htmlFor="emailForm">Email</FormLabel>
-                    <FormInput type="email" id="emailFormSignIn" name="emailForm" className="formSignUp" placeholder=" email@gmail.com"/>
+                    <FormInput type="email" id="emailFormSignIn" name="emailForm" onChange={(e) => setEmail(e.target.value)} placeholder=" email@gmail.com" value={email} />
+                    <div className="emailError"></div>
                 </FormOneDiv>
                 <FormOneDiv>
                     <FormLabel htmlFor="passwordForm">Mot de passe</FormLabel>
-                    <FormInput type="password" id="passwordFormSignIn" name="passwordForm" className="formSignUp" placeholder=" MonMdP25"/>
+                    <FormInput type="password" id="passwordFormSignIn" name="passwordForm" onChange={(e) => setPassword(e.target.value)} placeholder=" MonMdP25" value={password} />
+                    <div className="passwordError"></div>
+                </FormOneDiv>
+                <FormOneDiv>
+                    <FormInputButton type="submit" id="submitFormSignIn" value="Se connecter" />
                 </FormOneDiv>
             </FormAllInputDiv>
-            <FormButton>Se connecter</FormButton>
+            
         </FormAllDivButton>
        </div>
     )
