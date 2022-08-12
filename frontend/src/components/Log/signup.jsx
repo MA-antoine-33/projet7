@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import colors from "../../utils/styles/colors";
 import { useState} from 'react';
 import axios from "axios";
+import SignIn from "./signin";
 
 
 const FormAllDivButton = styled.div`
@@ -51,7 +52,14 @@ const FormInputButton = styled.input`
     } 
 `
 
+//style pour la phrase connection réussi
+const ValidSignUp = styled.h3`
+    text-align: center;
+    color: green;
+`
+
 const SignUp = () => {
+    const [formSubmit, setFormSubmit] = useState(false);
     const [userName, setUserName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -78,13 +86,12 @@ const SignUp = () => {
                 }
             })
             .then((res) => {
-                console.log(res)
                 if (res.data.errors) {
                     userNameError.innerHTML = res.data.errors.userName;
                     emailError.innerHTML = res.data.errors.email;
                     passwordError.innerHTML = res.data.errors.password;
                 } else {
-                    window.location = '/publication'
+                    setFormSubmit(true);
                 }
             })
             .catch((err) => {console.log(err)});
@@ -92,7 +99,14 @@ const SignUp = () => {
     }
 
     return(
+        
        <div className="connection-form">
+        {formSubmit ? (
+            <>
+            <SignIn/>
+            <ValidSignUp className="success">enregistrement réussi, veuillez-vous connecter</ValidSignUp>
+            </>
+        ) : ( 
         <FormAllDivButton>
             <FormTitle>Rejoignez la grande communauté de Groupomania</FormTitle>
             <FormAllInputDiv action="" onSubmit={handleRegistrer} id="signUpForm">
@@ -117,10 +131,11 @@ const SignUp = () => {
                     <div className="passwordConfirmationError"></div>
                 </FormOneDiv>
                 <FormOneDiv>
-                    <FormInputButton type="submit" id="submitFormSignUp" value="S'inscrire'" />
+                    <FormInputButton type="submit" id="submitFormSignUp" value="S'inscrire" />
                 </FormOneDiv>
             </FormAllInputDiv>
         </FormAllDivButton>
+        )}
        </div>
     )
 }

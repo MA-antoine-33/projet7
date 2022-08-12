@@ -1,3 +1,4 @@
-.g {
-    height: 100%;
+.d {
+    display: flex;
+    justify-content: flex-start;
 }
