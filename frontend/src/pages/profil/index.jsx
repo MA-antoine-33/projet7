@@ -2,6 +2,8 @@ import React from "react";
 import Login from "../../components/log";
 import styled from 'styled-components';
 import colors from "../../utils/styles/colors";
+import { UserIdContext } from "../../components/appContext";
+import { useContext } from "react";
 
 //import imageConnection from "../../assets/connection.jpg"
 
@@ -31,17 +33,23 @@ const DivGeneral = styled.div`
     `
 
 const Profil = () => {
-    return(
+    const uId = useContext(UserIdContext);
+    
+    return (
         
-        <DivAllPage className="profil-page">            
+        <DivAllPage className="profil-page">    
+        {uId ? (
+            <h1>Update Page</h1>
+        ) : (      
             <DivGeneral className="log-container">                
                 <Login signin={false} signup={true}/>
                 <Image className="img-container">
                     <img src="./connection.jpg" alt="Une équipe soudé" />
                 </Image>
             </DivGeneral>
+            )}  
         </DivAllPage>
-    )
-}
+    );
+};
 
 export default Profil;

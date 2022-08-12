@@ -80,7 +80,7 @@ const SignIn = () => {
     };
 
     return(
-       <div className="connection-form">
+       
         <FormAllDivButton>
             <FormTitle>Se connecter pour discuter avec ses collègues</FormTitle>
             <FormAllInputDiv action="" onSubmit={handleLogin} id="signInForm" >
@@ -100,7 +100,7 @@ const SignIn = () => {
             </FormAllInputDiv>
             
         </FormAllDivButton>
-       </div>
+       
     )
 }
 
