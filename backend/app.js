@@ -14,8 +14,10 @@ const publicationRoutes = require('./routes/publication');
 mongoose.connect("mongodb+srv://MA-antoine:Projet6@cluster0.sxjbyjp.mongodb.net/?retryWrites=true&w=majority",
   { useNewUrlParser: true,
     useUnifiedTopology: true })
+
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
+
 
   app.use(express.json());
 

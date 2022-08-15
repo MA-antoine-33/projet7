@@ -58,11 +58,11 @@ exports.login = (req, res, next) => {
 exports.deleteAccount = (req, res, next) => {
     User.findOne({ email: req.body.email})
       .then((user) => {
-        if (user.picture !== null) {
+        if (user.imageUrl !== null) {
           // Si photo de profil présente on la supprime du répertoire, puis on supprime l'user de la BDD
-          const filename = user.picture.split("/images/")[1];
+          const filename = user.imageUrl.split("/images/")[1];
           fs.unlink(`images/${filename}`, () => {
-            db.User.destroy({ where: { id: req.params.id } });
+            db.User.destroy({ where: { id: req.params._id } });
             res.status(200).json({ message: "Compte supprimé !" });
           });
         } else { // Sinon on supprime uniquement l'user
@@ -77,5 +77,5 @@ exports.deleteAccount = (req, res, next) => {
 //Fonction pour se deconnecter
 exports.logout = (req, res) => {
     res.clearCookie("jwt");
-    res.status(200).json("OUT");
+    res.status(200).json("déconnecté");
   };
