@@ -1,3 +1,4 @@
+
 //On exporte tout ce qui nous sera nécéssaire pour cérer nos routes
 const express = require('express');
 const router = express.Router();
@@ -16,7 +17,8 @@ router.get("/deleteAccount/:id", authCtrl.deleteAccount);
 
 
 //On créer les routes pour gérer son profil 
-router.get("/:id", auth, userCtrl.getOneUser);
+router.get("/:id",  userCtrl.getOneUser);
+router.get("/", userCtrl.getAllUsers);
 //router.get("/images/:id", auth, userCtrl.getProfilPicture);
 router.put("/:id", auth, multer, userCtrl.updateOneUser);
 

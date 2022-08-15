@@ -4,6 +4,7 @@ import colors from '../../utils/styles/colors'
 import { NavLink } from "react-router-dom";
 import { useContext } from 'react';
 import { UserIdContext } from '../appContext'
+import { useFetch } from '../../utils/hooks';
 
 
 
@@ -34,10 +35,27 @@ const DivNavLink = styled.div`
 
 function Header() {
   const uId = useContext(UserIdContext);
+  let userId = ""
+  
+  const user = JSON.parse(localStorage.getItem("userInfo"))
+  if (user) {
+    userId = user.userId
+  }
+  console.log(user)
+  const { data, error } = useFetch(
+    `${process.env.REACT_APP_API_URL}api/auth/${userId}`
+  )
+//62fa0d4862cae91b27a126b0
+  // eslint-disable-next-line no-unused-vars
+  const userList = data?.userList
+ 
+  if (error) {
+    return <span>Il y a un problème</span>
+  }
 
   return (
     <NavContainer>
-        <NavLink exact to="/">
+        <NavLink to="/">
           <DivNavLink>
             <HomeLogo src={GroupomaniaLogo} />
             <TitleHomePage>Votre réseau social d'entreprise</TitleHomePage>
@@ -47,8 +65,8 @@ function Header() {
           <ul>
             <li></li>
             <li className='welcome'>
-              <NavLink exact to="/">
-                <h4>Bienvenue user</h4>
+              <NavLink to="/publication">
+                <h4>Bienvenue {data.userName}</h4>
               </NavLink>
             </li>
             logo Logout
@@ -57,7 +75,7 @@ function Header() {
           <ul>
             <li></li>
             <li>
-              <NavLink exact to="/">
+              <NavLink to="/">
                 <h4>se connecter</h4>
               </NavLink>
             </li>

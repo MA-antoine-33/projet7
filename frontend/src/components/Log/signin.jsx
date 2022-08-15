@@ -73,7 +73,12 @@ const SignIn = () => {
                 emailError.innerHTML = res.data.errors.email;
                 passwordError.innerHTML = res.data.errors.password;
             } else {
+                localStorage.setItem("userInfo", JSON.stringify(res.data))
+                console.log(res)
                 window.location = '/publication'
+                
+                
+                //localStorage.setItem(userInfo, res).stringify
             }
         })
         .catch((err) => {console.log(err)});
