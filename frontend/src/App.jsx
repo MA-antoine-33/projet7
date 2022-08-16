@@ -5,6 +5,7 @@ import Header from "./components/header";
 import Footer from "./components/footer";
 import Profil from "./pages/profil"
 import Publication from "./pages/publication";
+import ModifyProfil from "./components/publication/modifyProfil";
 
 
 import { useFetch } from "./utils/hooks";
@@ -25,7 +26,6 @@ const App = () => {
   if (user) {
     userId = user.userId
   }
-  console.log(user)
   const { data, error } = useFetch(
     `${process.env.REACT_APP_API_URL}api/auth/${userId}`
   )
@@ -61,6 +61,7 @@ const App = () => {
             <Routes>
                 <Route path="/" element={<Profil />}></Route>
                 <Route path="/publication" element={<Publication />}></Route>
+                <Route path="/modifyProfil" element={<ModifyProfil />}></Route>
             </Routes>
             <Footer />
             </div>

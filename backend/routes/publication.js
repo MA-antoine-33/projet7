@@ -16,9 +16,9 @@ router.delete("/:id", auth, commentCtrl.deleteComment);*/
 
 
 //On créer les routes pour gérer publications
-router.get("/", auth, postCtrl.getAllPosts);
-router.get("/:id", auth, postCtrl.getOnePost);
-router.post("/", auth, multer, postCtrl.createPost);
+router.get("/", postCtrl.getAllPosts);
+router.get("/:id", postCtrl.getOnePost);
+router.post("/create", auth, postCtrl.createPost);
 router.delete("/:id", auth, postCtrl.deletePost);
 router.put("/:id", auth, postCtrl.updatePost);
 //router.get("/images/:id", auth, postCtrl.getOneImage);

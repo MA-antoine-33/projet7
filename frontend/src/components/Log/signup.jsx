@@ -51,7 +51,6 @@ const FormInputButton = styled.input`
         color: black;
     } 
 `
-
 //style pour la phrase connection réussi
 const ValidSignUp = styled.h3`
     text-align: center;
@@ -67,7 +66,7 @@ const SignUp = () => {
 
     const handleRegistrer = async (e) => {
         e.preventDefault();
-        const userNameError = document.querySelector(".userNameForm");
+        const userNameError = document.querySelector(".userNameError");
         const emailError = document.querySelector(".emailError");
         const passwordError = document.querySelector(".passwordError");
         const passwordConfirmationError = document.querySelector(".passwordConfirmationError");

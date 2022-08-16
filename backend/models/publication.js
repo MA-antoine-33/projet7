@@ -6,8 +6,9 @@ const { stringify } = require('querystring');
 //On créer notre shéma de donnée ou on liste les différents champs dont notre objet aura besoin
 const postSchema = mongoose.Schema({
     userId: { type: String, required: true },
-    name: { type: String, required: true },
+    userName: { type: String, required: true },
     description: { type: String, required: true },
+    imageURL: { type: String },
     date: { type: Number },
     like: { type: Number },
     dislike: { type: Number},

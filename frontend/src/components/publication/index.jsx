@@ -1,7 +1,7 @@
 import React from "react";
 import styled from 'styled-components';
 import DisplayProfil from "./nav";
-import Post from "./post";
+import Post from "../post";
 
 
 const DivAllPage = styled.div`

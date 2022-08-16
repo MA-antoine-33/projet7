@@ -41,7 +41,6 @@ function Header() {
   if (user) {
     userId = user.userId
   }
-  console.log(user)
   const { data, error } = useFetch(
     `${process.env.REACT_APP_API_URL}api/auth/${userId}`
   )
