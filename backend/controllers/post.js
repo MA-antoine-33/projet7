@@ -4,6 +4,10 @@
 //router.post("/:id/likes", auth, postCtrl.countLikes);
 const Post = require('../models/publication');
 const fs = require('fs');
+const User = require('../models/user');
+const jwt = require ('jsonwebtoken');
+
+
 
 //On créer et on exporte le controller nous permettant de voir un post en particulier e
 exports.getOnePost = (req, res, next) => {
@@ -22,7 +26,8 @@ exports.getAllPosts = (req, res, next) => {
 
 //On créer et exporte le controllers nous permettant de créer un post
 exports.createPost = (req, res, next) => {
-
+  
+  
     //On commencer par parser notre objet pour l'utiliser avec multer
     const postObjet = JSON.parse(req.body.post);
     //On supprime les données qui seront générées automatiquement
@@ -32,7 +37,7 @@ exports.createPost = (req, res, next) => {
     //On créer donc notre objet avec les données remplis, on génére notre url d'images, on met les compteurs de like à 0 et les tableaux usersLiked vides
     const post = new Post({
         ...postObjet,
-        userId: req.auth.userId,
+        userName: User.UserName,
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
         like: 0,
         dislike: 0,
@@ -43,6 +48,8 @@ exports.createPost = (req, res, next) => {
       post.save()
       .then(() => res.status(201).json({message : 'Publication enregistrée'}))
       .catch(error => res.status(400).json({ error }));
+      
+    
   };
 
 //On créer et exporte le middelware nous permettant de modifier un post existant

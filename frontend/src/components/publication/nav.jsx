@@ -4,11 +4,8 @@ import colors from '../../utils/styles/colors';
 import { FaSearch } from "react-icons/fa";
 import { Button } from '../../utils/styles/atoms';
 import { useFetch } from "../../utils/hooks";
-import { Navigate } from "react-router-dom";
-
 import axios from "axios";
-//import { userInfo } from 'os';
-//import Logout from '../log/logout';
+
 
 //Style pour l'ensemble de la page publication
 const DivAllPage = styled.div`
@@ -106,8 +103,6 @@ const ImageProfil = styled.img`
 function DisplayProfil() {
     const [isOpen, setIsOpen] = useState(false)
     const user = JSON.parse(localStorage.getItem("userInfo"))
-    console.log(user)
-
     const { data, error } = useFetch(
         `${process.env.REACT_APP_API_URL}api/auth/${user.userId}`
       )
@@ -115,12 +110,14 @@ function DisplayProfil() {
         return <span>Il y a un problème</span>
       }
     
-      // eslint-disable-next-line no-unused-vars
-      const userList = data?.userList
-      const usertestId = data._id
+    //Modifier son profil 
+    const updateOneUser =  () => {
+        window.location.href = "http://localhost:3000/modifyProfil";
+    }
+     
     //Se déconnecter
       const logoutHandler = async () => {
-        await axios.get("http://localhost:4200/api/auth/logout");
+        await axios.get(`${process.env.REACT_APP_API_URL}api/auth/logout`);
         window.location.href = "http://localhost:3000/";
         localStorage.clear();
       }
@@ -128,11 +125,9 @@ function DisplayProfil() {
       //supprimer son compte 
       const deleteAccount = () => {
         if (!window.confirm(`Voulez-vous vraiment désactiver le compte ?`)) return;
-    
-        
-        axios.get(`http://localhost:4200/api/auth/deleteAccount/${usertestId}`);
-       
-        <Navigate to="/" />
+        axios.get(`http://localhost:4200/api/auth/deleteAccount/${user.userId}`);
+        window.location.href = "http://localhost:3000/";
+        localStorage.clear();
       };
 
     return isOpen ? (
@@ -149,7 +144,7 @@ function DisplayProfil() {
                 <ProfilNav>
                     <ImageProfilOpen src={data.imageUrl} alt={data.description}/>
                     <p>{data.userName}</p>
-                        <Button id='ButtonModify'>Modifier votre profil</Button>
+                        <Button id='ButtonModify' onClick={updateOneUser}>Modifier votre profil</Button>
                         <Button id='ButtonSignOut' onClick={logoutHandler}>Se déconnecter</Button>
                         <Button id='ButtonCloseProfil' onClick={() => setIsOpen(false)}>Fermer le profil</Button>
                         <ButtonDelete id='ButtonDelete' onClick={deleteAccount}>Supprimer son compte</ButtonDelete>

@@ -34,7 +34,7 @@ exports.updateOneUser = (req, res, next) => {
         } else {
           User.updateOne({ _id: req.params.id}, {...userProfil, _id: req.params.id})
           .then(() => res.status(200).json({ message: 'Profil modifié'}))
-          .catch(error => res.status(401).json({ error}));
+          .catch(() => res.status(401).json({ message: 'Profil modifié' }));
         };
       })
       .catch(error => res.status(400).json({ error }));
