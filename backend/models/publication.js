@@ -8,7 +8,7 @@ const postSchema = mongoose.Schema({
     userId: { type: String, required: true },
     userName: { type: String, required: true },
     description: { type: String, required: true },
-    imageURL: { type: String },
+    imageUrl: { type: String },
     date: { type: Number },
     like: { type: Number },
     dislike: { type: Number},

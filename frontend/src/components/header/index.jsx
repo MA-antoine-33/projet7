@@ -5,12 +5,12 @@ import { NavLink } from "react-router-dom";
 import { useContext } from 'react';
 import { UserIdContext } from '../appContext'
 import { useFetch } from '../../utils/hooks';
-
+import axios from 'axios';
 
 
 const NavContainer = styled.nav`
-  font-size: 1.5em;
-  padding: 10px;
+  padding: 0px 25px;
+  height: 120px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -30,10 +30,28 @@ const DivNavLink = styled.div`
   `
   const TitleHomePage = styled.h3`
     margin-left: 5px;
-    font-size: 0.8em;
+    font-size: 1em;
   ` 
+  //Style pour le message de bienvenue
+  const AllListWelcome = styled.ul`
+    list-style-type: none;
+    text-align: center;
+  `
+  const ListWelcome = styled.li`
+    text-decoration: none;
+  `
+  const TitleWelcome = styled.h4`
+    margin-rigth: 5px;
+    font-size: 1em;
+    color: black;
+  `
+  //style pour le logout
+  const ImageLogout = styled.img`
+    width: 50px;
+  `
 
 function Header() {
+
   const uId = useContext(UserIdContext);
   let userId = ""
   
@@ -44,9 +62,11 @@ function Header() {
   const { data, error } = useFetch(
     `${process.env.REACT_APP_API_URL}api/auth/${userId}`
   )
-//62fa0d4862cae91b27a126b0
-  // eslint-disable-next-line no-unused-vars
-  const userList = data?.userList
+  const logoutHandler = async () => {
+        await axios.get(`${process.env.REACT_APP_API_URL}api/auth/logout`);
+        window.location.href = "http://localhost:3000/";
+        localStorage.clear();
+      } 
  
   if (error) {
     return <span>Il y a un problème</span>
@@ -61,25 +81,25 @@ function Header() {
           </DivNavLink>
         </NavLink>
         {uId ? (
-          <ul>
-            <li></li>
-            <li className='welcome'>
+          <AllListWelcome>
+            <ListWelcome>
               <NavLink to="/publication">
-                <h4>Bienvenue {data.userName}</h4>
+                <TitleWelcome>Bienvenue {data.userName}</TitleWelcome>
               </NavLink>
-            </li>
-            logo Logout
-          </ul>
+            </ListWelcome>
+            <ListWelcome onClick={logoutHandler}>
+              <ImageLogout src="./logout.png" alt="Par ici la sortie" />
+            </ListWelcome>
+          </AllListWelcome>
         ) : (
-          <ul>
-            <li></li>
-            <li>
+          <AllListWelcome>
+            <ListWelcome>
               <NavLink to="/">
-                <h4>se connecter</h4>
+                <TitleWelcome>se connecter</TitleWelcome>
               </NavLink>
-            </li>
-            logo Logout
-          </ul>
+            </ListWelcome>
+            
+          </AllListWelcome>
         )}
     </NavContainer>
   )

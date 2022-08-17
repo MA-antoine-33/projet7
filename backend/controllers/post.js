@@ -6,6 +6,7 @@ const Post = require('../models/publication');
 const fs = require('fs');
 const User = require('../models/user');
 const jwt = require ('jsonwebtoken');
+const user = require('../models/user');
 
 
 
@@ -29,17 +30,19 @@ exports.createPost = (req, res, next) => {
   
   
     //On commencer par parser notre objet pour l'utiliser avec multer
-    const postObjet = JSON.parse(req.body.post);
+    /*const postObjet = JSON.parse(req.body.post);
     //On supprime les données qui seront générées automatiquement
     delete postObjet._id;
-    delete postObjet._userID;
+    delete postObjet._userId;*/
   
     //On créer donc notre objet avec les données remplis, on génére notre url d'images, on met les compteurs de like à 0 et les tableaux usersLiked vides
     const post = new Post({
-        ...postObjet,
-        userName: User.UserName,
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+        //...postObjet,
+        userId: req.body.userId,
+        userName: req.body.userName,
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.body.imageUrl}`,
         like: 0,
+        description: req.body.description,
         dislike: 0,
         usersLiked: [],
         usersDisliked: []
@@ -48,7 +51,7 @@ exports.createPost = (req, res, next) => {
       post.save()
       .then(() => res.status(201).json({message : 'Publication enregistrée'}))
       .catch(error => res.status(400).json({ error }));
-      
+    
     
   };
 

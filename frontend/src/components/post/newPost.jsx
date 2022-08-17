@@ -4,12 +4,12 @@ import colors from "../../utils/styles/colors";
 import { Button } from "../../utils/styles/atoms";
 import axios from "axios";
 import { useState} from 'react';
+import { useFetch } from "../../utils/hooks";
 
 
 const DivAllPage = styled.div`
     display: flex;
     flex-direction: column;
-    width: 79%;
     border-radius: 15px;
     background-color: ${colors.secondary};
     `
@@ -52,9 +52,16 @@ const NewPostDiv = styled.div`
             background-color: white;
         }        
     `
+//style pour la div cpost créé
+const DivPostCree = styled.div`
+        text-align: center;
+        color: green;
+        margin-top: 10px;
+`
 
 const NewPost = () => {
     const user = JSON.parse(localStorage.getItem("userInfo"))
+    const [validationPost, setValidationPost] = useState(false)
     const [description, setDescription] = useState('');
     const [imageUrl, setImageUrl] = useState('');
     //const userId = user.userId
@@ -63,16 +70,27 @@ const NewPost = () => {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       };
+      const { data, error } = useFetch(
+        `${process.env.REACT_APP_API_URL}api/auth/${user.userId}`
+      )
+      if (error) {
+        return <span>Il y a un problème</span>
+      }
+    
+    const userId = user.userId
     
 const publishNewPost = (e) => {
     e.preventDefault();
     //const description = 
     const descriptionError = document.querySelector(".descriptionError");
     const imageUrlError = document.querySelector(".imageUrlError");
+    const userName = data.userName
     axios({
         method: "post",
         url: `${process.env.REACT_APP_API_URL}api/publication/create`,
         data: {
+            userName,
+            userId,
             description,
             imageUrl, 
         },
@@ -83,10 +101,7 @@ const publishNewPost = (e) => {
                 descriptionError.innerHTML = res.data.errors.description;
                 imageUrlError.innerHTML = res.data.errors.imageURL;
             } else {
-                localStorage.setItem("postInfo", JSON.stringify(res.data))
-                console.log(res)
-                
-                
+                setValidationPost(true)
                 //localStorage.setItem(userInfo, res).stringify
             }
         })
@@ -103,8 +118,13 @@ const publishNewPost = (e) => {
                     <InputForImageUrl id="ImageNewPost"type='text' placeholder="Rentrer l'url de votre image" onChange={(e) => setImageUrl(e.target.value)} value={imageUrl}/>
                     <div className="imageUrlError"></div>
                     <Button id='ButtonPublishNewPost' onClick={publishNewPost}>Publier</Button>
-                </DivButtonNewPost>
+                </DivButtonNewPost>  
             </NewPostDiv>
+            {validationPost ? (
+                    <DivPostCree>post créé</DivPostCree>
+                ) : (
+                    <div></div>
+                )}
         </DivAllPage>
     )
 }
