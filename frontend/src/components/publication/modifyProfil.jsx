@@ -80,9 +80,10 @@ const ModifyProfil = () => {
         await axios({
             method: "put",
             url: `${process.env.REACT_APP_API_URL}api/auth/${userId}`,
-            body: {
+            data: {
                 userName: userName,
-                imageUrl: userName,
+                imageUrl: imageUrl,
+                email: data.email
             },
             headers: headers
         })
@@ -93,8 +94,7 @@ const ModifyProfil = () => {
                 
             } else {
                 window.location.href = "http://localhost:3000/publication";
-              
-                
+ 
             }
         })
         .catch((err) => {console.log(err)});
@@ -102,9 +102,6 @@ const ModifyProfil = () => {
         
     }
 
-        //await axios.put(`${process.env.REACT_APP_API_URL}api/auth/${user.userId}`);
-        //window.location.href = "http://localhost:3000/publication";
-          //}
     return(
         <DivAllPage className="modify-page">
                 <FormAllInputDiv action="" onSubmit={updateOneUser} id="modifyForm">

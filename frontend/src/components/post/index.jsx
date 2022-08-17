@@ -14,8 +14,6 @@ const DivAllPage = styled.div`
     background-color: ${colors.secondary};
     `
 
-
-
 const Post = () => {
     return(
         
