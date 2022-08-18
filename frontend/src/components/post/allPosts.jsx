@@ -134,7 +134,7 @@ const AllPosts = () => {
                 <AllPostDisplay id="allPostDisplay">        
                     <ul>
                         {data.map((postInfo, index) => (
-                            <Posts key={index} postInfo={postInfo}/>
+                            <Posts key={index} postInfo={postInfo} />
                         ))}
                     </ul>
                 </AllPostDisplay>    
