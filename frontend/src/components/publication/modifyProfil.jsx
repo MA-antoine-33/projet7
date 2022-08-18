@@ -54,6 +54,7 @@ const FormInputButton = styled.input`
     } 
 `
 
+
 const ModifyProfil = () => {
     const [userName, setUserName] = useState('');
     const [imageUrl, setImageUrl] = useState('');
@@ -91,15 +92,11 @@ const ModifyProfil = () => {
             if (res.data.errors) {
                 userNameError.innerHTML = res.data.errors.userName;
                 imageUrlError.innerHTML = res.data.errors.imageUrl;
-                
             } else {
                 window.location.href = "http://localhost:3000/publication";
- 
             }
         })
         .catch((err) => {console.log(err)});
-        console.log(data)
-        
     }
 
     return(

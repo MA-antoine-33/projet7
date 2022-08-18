@@ -60,16 +60,22 @@ const DivPostCree = styled.div`
 `
 
 const NewPost = () => {
+    //récupérere les données utilisateurs dans le local storage
     const user = JSON.parse(localStorage.getItem("userInfo"))
+    //On créer nos states
     const [validationPost, setValidationPost] = useState(false)
     const [description, setDescription] = useState('');
     const [imageUrl, setImageUrl] = useState('');
-    //const userId = user.userId
+    //Initialisation de la date
+    let dates = new Date();
+    let dateDay = (dates.getDate() + "/" + dates.getMonth() + "/"+ dates.getFullYear() + " à " + dates.getHours() + "h " + dates.getMinutes() + "min" )
+    //récupérer les tokens pour l'authentification
     const token = user.token;
     const headers = {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       };
+       //Récupérer les données pour pouvoir les modifier
       const { data, error } = useFetch(
         `${process.env.REACT_APP_API_URL}api/auth/${user.userId}`
       )
@@ -78,34 +84,34 @@ const NewPost = () => {
       }
     
     const userId = user.userId
-    
-const publishNewPost = (e) => {
-    e.preventDefault();
-    //const description = 
-    const descriptionError = document.querySelector(".descriptionError");
-    const imageUrlError = document.querySelector(".imageUrlError");
-    const userName = data.userName
-    axios({
-        method: "post",
-        url: `${process.env.REACT_APP_API_URL}api/publication/create`,
-        data: {
-            userName,
-            userId,
-            description,
-            imageUrl, 
-        },
-        headers: headers
-    })  
-        .then((res) => {
-            if(res.data.errors) {
-                descriptionError.innerHTML = res.data.errors.description;
-                imageUrlError.innerHTML = res.data.errors.imageURL;
-            } else {
-                setValidationPost(true)
-                //localStorage.setItem(userInfo, res).stringify
-            }
-        })
-        .catch((err) => {console.log(err)})}
+    //On créer la fonction qui va appeler l'API pour créer une publication
+    const publishNewPost = (e) => {
+        e.preventDefault();
+        const descriptionError = document.querySelector(".descriptionError");
+        const imageUrlError = document.querySelector(".imageUrlError");
+        const userName = data.userName
+        axios({
+            method: "post",
+            url: `${process.env.REACT_APP_API_URL}api/publication/create`,
+            data: {
+                userName,
+                userId,
+                description,
+                imageUrl,
+                date: dateDay
+            },
+            headers: headers
+        })  
+            .then((res) => {
+                if(res.data.errors) {
+                    descriptionError.innerHTML = res.data.errors.description;
+                    imageUrlError.innerHTML = res.data.errors.imageURL;
+                } else {
+                    setValidationPost(true)
+                    window.location.reload()
+                }
+            })
+            .catch((err) => {console.log(err)})}
 
 
     return(

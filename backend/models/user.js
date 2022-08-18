@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const imageDefault = "http://localhost:4200/images/profil_par_default.jpg";
+const imageDefault = "http://localhost:4200/images/profil_par_defaut.jpg";
 
 
 //Constante nous permettant de nous assurer que deux  utilisateurs ne peuvent utiliser la même adresse 

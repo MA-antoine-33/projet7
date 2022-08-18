@@ -10,6 +10,7 @@ import ModifyProfil from "./components/publication/modifyProfil";
 
 import { useFetch } from "./utils/hooks";
 import { UserIdContext } from "./components/appContext";
+import ModifyPost from "./components/post/modifyPost";
 //import axios from "axios";
 
 
@@ -62,6 +63,7 @@ const App = () => {
                 <Route path="/" element={<Profil />}></Route>
                 <Route path="/publication" element={<Publication />}></Route>
                 <Route path="/modifyProfil" element={<ModifyProfil />}></Route>
+                <Route path="/modifyPost" element={<ModifyPost />}></Route>
             </Routes>
             <Footer />
             </div>
