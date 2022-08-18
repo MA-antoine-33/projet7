@@ -166,7 +166,7 @@ const Posts = ({postInfo}) => {
                 } else {
                     setImageLoad(false)}
                 })
-            })
+            }, [postInfo, user])
             //Je créer l'itérations pour pouvoir faire chaque post avec map dans le fichier allposts
             for (let i = 0, l = data.length; i < l; i++) {
                 if (postInfo._id === data[i]._id){

@@ -68,7 +68,8 @@ const NewPost = () => {
     const [imageUrl, setImageUrl] = useState('');
     //Initialisation de la date
     let dates = new Date();
-    let dateDay = (dates.getDate() + "/" + dates.getMonth() + "/"+ dates.getFullYear() + " à " + dates.getHours() + "h " + dates.getMinutes() + "min" )
+    let dateDay = (dates.getDate() + "/" + (dates.getMonth() + 1) + "/"+ dates.getFullYear() + " à " + dates.getHours() + "h " + dates.getMinutes() + "min" )
+    
     //récupérer les tokens pour l'authentification
     const token = user.token;
     const headers = {

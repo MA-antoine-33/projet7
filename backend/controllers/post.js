@@ -40,7 +40,8 @@ exports.createPost = (req, res, next) => {
         //...postObjet,
         userId: req.body.userId,
         userName: req.body.userName,
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.body.imageUrl}`,
+        
+        imageUrl: req.body.imageUrl ?  `${req.protocol}://${req.get('host')}/images/${req.body.imageUrl}`: "",
         like: 0,
         date: req.body.date,
         description: req.body.description,
