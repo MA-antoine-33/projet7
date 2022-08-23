@@ -4,8 +4,7 @@ import styled from 'styled-components';
 import colors from "../../utils/styles/colors";
 import { UserIdContext } from "../../components/appContext";
 import { useContext } from "react";
-
-//import imageConnection from "../../assets/connection.jpg"
+import { NavLink } from "react-router-dom";
 
 
 const Image = styled.div`
@@ -15,6 +14,16 @@ const Image = styled.div`
         height: 100%;
         width: 350px;
         border-radius: 0px 15px 15px 0px;        
+    }
+    @media (max-width: 900px) {
+        width: 100%;
+        height: 250px;
+        & img {
+            height: 100%;
+            object-fit: cover;
+            width: 100%;
+            border-radius: 0px 0px 15px 15px;        
+        }
     }
 `
 
@@ -30,6 +39,9 @@ const DivGeneral = styled.div`
     border-radius: 15px;
     width: 750px;
     background-color: ${colors.secondary};
+    @media (max-width: 900px) {
+        flex-direction: column;
+    }
     `
 
 const Profil = () => {
@@ -39,7 +51,10 @@ const Profil = () => {
         
         <DivAllPage className="profil-page">    
         {uId ? (
-            <h1>Update Page</h1>
+            
+                <h1>Vous êtes déjà connecté, aller sur la page de publication <NavLink to="/publication" >en cliquant ici</NavLink></h1>
+                
+            
         ) : (      
             <DivGeneral className="log-container">                
                 <Login signin={false} signup={true}/>

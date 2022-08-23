@@ -54,7 +54,7 @@ exports.login = (req, res, next) => {
     .catch(error => res.status(500).json({ error }));
 };
 
-//Fonction pour supprimer un utilisateur
+/*//Fonction pour supprimer un utilisateur
 exports.deleteAccount = (req, res, next) => {
     User.findOne({ email: req.body.email})
       .then((user) => {
@@ -72,7 +72,7 @@ exports.deleteAccount = (req, res, next) => {
       })
   
       .catch((error) => res.status(500).json({ error }));
-  };
+  };*/
 
 //Fonction pour se deconnecter
 exports.logout = (req, res) => {

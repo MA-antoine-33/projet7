@@ -11,7 +11,8 @@ const DivAllPage = styled.div`
     margin-bottom: 50px;
     margin-top: 50px;
     width: 90%;
-    height: 700px;
+    min-height: 700px;
+    height: auto;
     background-color: ${colors.secondary};
     `
 

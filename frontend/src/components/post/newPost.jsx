@@ -99,7 +99,9 @@ const NewPost = () => {
                 userId,
                 description,
                 imageUrl,
-                date: dateDay
+                date: dateDay,
+                like: 0,
+                dislike: 0
             },
             headers: headers
         })  

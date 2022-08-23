@@ -25,7 +25,7 @@ router.put("/:id", auth, postCtrl.updatePost);
 
 
 //On créer les routes pour gérer les likes
-router.patch("/:id/likes", auth, postCtrl.likes);
+router.patch("/:id/likes",auth, postCtrl.likes);
 /*router.post("/:id/postLike", auth, postCtrl.postLike);
 router.post("/:id/likes", auth, postCtrl.countLikes);*/
 

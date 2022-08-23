@@ -12,6 +12,9 @@ const DivAllPage = styled.div`
     width: 79%;
     border-radius: 15px;
     background-color: ${colors.secondary};
+    @media (max-width: 767px) {
+        width: 95%;
+    }
     `
 
 const Post = () => {

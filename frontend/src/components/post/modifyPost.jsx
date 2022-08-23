@@ -4,7 +4,6 @@ import colors from "../../utils/styles/colors";
 import axios from "axios";
 import { useFetch } from "../../utils/hooks";
 import { useState} from 'react';
-//import { useEffect } from "react";
 
 //Style pour la page
 const DivAllPage = styled.div`
@@ -32,8 +31,6 @@ const FormPostDiv = styled.div`
     //style pour la partie contenue de la nouvelle publication
     const TextContentNewPost = styled.textarea`
         font-size: 1em;
-        height: 80%;
-        width: 60%;
         border: 0.3em ridge ${colors.secondary};
         border-radius: 10px;
         background-color: ${colors.tertiaryBis};
@@ -65,10 +62,10 @@ const FormPostDiv = styled.div`
     } 
 `
 
-
 const ModifyPost = () => {
     const [description, setDescription] = useState('');
     const [imageUrl, setImageUrl] = useState('');
+    const userAdmin = JSON.parse(localStorage.getItem("userAdmin"));
     let userId = ""
     //Initialisation de la date
     let dates = new Date();
@@ -104,7 +101,8 @@ const ModifyPost = () => {
                 description: description,
                 imageUrl: imageUrl,
                 email: data.email,
-                date: dateDay
+                date: dateDay,
+                admin: userAdmin
             },
             headers: headers
         })

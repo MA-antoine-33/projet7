@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useEffect } from "react";
-//import Like from "./like.jsx";
-//import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
+
 
 //<FontAwesomeIcon icon="fa-solid fa-thumbs-up" />
 //style pour l'ensmeble des posts
@@ -23,6 +23,11 @@ const DivOnePost = styled.article`
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
+        @media (max-width: 767px) {
+            flex-direction: column;
+            margin-bottom: 10px;
+            align-items: flex-start;
+        }
     `
     const DivTitleDate = styled.div`
         display: flex;
@@ -67,7 +72,12 @@ const DivOnePost = styled.article`
         border-radius: 10px;
         background-color: #FFEBD7;
     `
-    //Style pour les commentaires
+    const PublicationTextP = styled.p`
+        height: 60px;
+        overflow: scroll;
+        padding 5px;
+    `
+ /*   //Style pour les commentaires
     const DivComment = styled.div`
         display: flex;
         justify-content: space-between;
@@ -95,7 +105,7 @@ const DivOnePost = styled.article`
         `
         const DivShowComment = styled.div`
             margin-top: 10px;
-        `
+        `*/
 //Style général pour les likes unlikes
 const DivLikeUnlike = styled.div`
    display: flex;
@@ -147,7 +157,9 @@ const Posts = ({postInfo}) => {
     const [data, setData] = useState([]);
     const [changeButton, setChangeButton] = useState();
     const [imageLoad, setImageLoad] = useState();
-    
+    const userAdmin = JSON.parse(localStorage.getItem("userAdmin"));
+   
+      
     useEffect(() => {  
         axios({
                 method: "get",
@@ -155,25 +167,28 @@ const Posts = ({postInfo}) => {
             })  
                 .then((res) => setData(res.data))
                 //Je créer les conditions pour afficher les boutons modifié si on est enregistré
-                .then(() => {if (postInfo.userId !== user.userId) {
+                .then(() => {if (userAdmin === true) {
+                    setChangeButton(false)
+                } else {
+                    if (postInfo.userId !== user.userId) {
                     setChangeButton(true);
                 } else {
                     setChangeButton(false)}
-                })
+                }})
                 //Je créer les conditions pour afficher une image s'il y en a une
                 .then(() => {if (postInfo.imageUrl === null || postInfo.imageUrl === undefined || postInfo.imageUrl === "") {
                     setImageLoad(true);
                 } else {
                     setImageLoad(false)}
                 })
-            }, [postInfo, user])
+            }, [])
             //Je créer l'itérations pour pouvoir faire chaque post avec map dans le fichier allposts
             for (let i = 0, l = data.length; i < l; i++) {
                 if (postInfo._id === data[i]._id){
                     postInfo.Objectid = data[i]._id;
                     postInfo.userId = data[i].userId;
-                    //postInfo.like = data[i].like;
-                    //postInfo.dislike = data[i].dislike;
+                    postInfo.like = data[i].like;
+                    postInfo.dislike = data[i].dislike;
                     postInfo.userName = data[i].userName;
                     postInfo.imageUrl = data[i].imageUrl;
                     postInfo.date = data[i].date;}
@@ -188,7 +203,8 @@ const Posts = ({postInfo}) => {
             data: {
                 userId: postInfo.userId,
                 userName: postInfo.userName,
-                imageUrl: postInfo.imageUrl,  
+                imageUrl: postInfo.imageUrl,
+                admin: user.admin  
             },
             headers: headers
         }).then(window.location.reload())
@@ -204,34 +220,34 @@ const Posts = ({postInfo}) => {
             method: "patch",
             url: `${process.env.REACT_APP_API_URL}api/publication/${postInfo.Objectid}/likes`,
             data: {
+                postId: postInfo.Objectid,
+                
                 userId: data._id,
                 like: postInfo.like ++,
                 email: data.email,
             },
             headers: headers
         })
-        .then(() => {
-            window.location.reload()
-            })
             console.log(postInfo)
         console.log("ajouter")
     }
     //Fonction pour gérer les je n'aime pas
-    const addUnlike = (e) => {
+  const addUnlike = (e) => {
+       
         e.preventDefault();
         axios({
            method: "patch",
            url: `${process.env.REACT_APP_API_URL}api/publication/${postInfo.Objectid}/likes`,
            data: {
+            postId: postInfo.Objectid,
                userId: data._id,
-               dislike: postInfo.dislike ++,
+               dislike: postInfo.dislike,
                email: data.email,
            },
            headers: headers
        })
-       .then(() => {
-           window.location.reload()
-           })
+       .then(localStorage.setItem("postId", JSON.stringify(postInfo.Objectid)))
+       
            console.log(postInfo)
         console.log("Je n'aime pas")
     }
@@ -245,7 +261,6 @@ return (
                 <img src={postInfo.imageUrl} alt="imge correspondant à la publication" />
             </DivPostImage>
         )} 
-        <div>
             <DivUserInfo>
                 <DivTitleDate>
                     <TitleHDeux>{postInfo.userName}</TitleHDeux>
@@ -260,9 +275,8 @@ return (
                     </div>
                 )}
             </DivUserInfo>
-        </div>
         <DivTextPost>
-            <p>{postInfo.description}</p>
+            <PublicationTextP>{postInfo.description}</PublicationTextP>
         </DivTextPost>
         <DivLikeUnlike>
             <ButtonLikes onClick={addLike}>J'aime </ButtonLikes>
@@ -270,16 +284,16 @@ return (
             <ButtonUnlikes onClick={addUnlike}>Je n'aime pas</ButtonUnlikes>
             <CountNumberUnlike>{postInfo.dislike}</CountNumberUnlike>
         </DivLikeUnlike>
-        <DivComment>
+         
+    </DivOnePost>
+    );
+};
+/* <DivComment>
             <TextComment placeholder="Commentez ici..."></TextComment>
             <ButtonAddComment>Poster votre commentaire</ButtonAddComment>
         </DivComment>
         <DivShowComment>
             <ButtonAddComment>Voir tous les commentaires</ButtonAddComment>
             <div className="allCommentDisplay">Tous les commentaires </div>
-        </DivShowComment>    
-    </DivOnePost>
-    );
-};
-
+        </DivShowComment>  */
 export default Posts;

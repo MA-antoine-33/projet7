@@ -16,6 +16,15 @@ const NavContainer = styled.nav`
   align-items: center;
   background: linear-gradient(135deg, ${colors.secondary} 60%, ${colors.primaryBis});
   border-bottom: 1px solid black;
+  @media (max-width: 991px) {
+    height: 100px;
+  }
+  @media (max-width: 767px) {
+   flex-direction: column;
+   justify-content: space-around;
+   height: 150px;
+  }
+ 
 `
 //Style pour le lien de retour à la page d'accueil (logo + titre)
 const DivNavLink = styled.div`
@@ -36,6 +45,14 @@ const DivNavLink = styled.div`
   const AllListWelcome = styled.ul`
     list-style-type: none;
     text-align: center;
+    @media (max-width: 991px)  {
+      display flex;
+      align-items: center;
+    }
+    @media (max-width: 767px) {
+      margin-top: 0px
+    }
+    
   `
   const ListWelcome = styled.li`
     text-decoration: none;
@@ -48,7 +65,17 @@ const DivNavLink = styled.div`
   //style pour le logout
   const ImageLogout = styled.img`
     width: 50px;
+    @media (max-width: 991px) {
+      width: 35px;
+      margin-left: 40px;
+    }
+    @media (max-width: 767px) {
+      width: 30px;
+      margin-left: 50px;
+    }
   `
+
+
 
 function Header() {
 
