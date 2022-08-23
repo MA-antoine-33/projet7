@@ -13,6 +13,9 @@ const FormAllDivButton = styled.div`
 `
 const FormTitle = styled.h1`
     text-align: center;
+    @media (max-width: 700px) {
+        font-size: 1.5em;
+    }
 `
 const FormAllInputDiv = styled.form`
     display: flex;
@@ -20,10 +23,14 @@ const FormAllInputDiv = styled.form`
     align-items: flex-end;
     margin-top:20px;
     margin-bottom: 20px;
-    margin-right: 30px;
+    margin-right: 30px; 
 `
 const FormOneDiv = styled.div`
-    margin-bottom: 20px
+    margin-bottom: 20px;
+    @media (max-width: 500px) {
+        display: flex;
+        flex-direction: column;
+    }
 `
 const FormLabel = styled.label`
     margin-right: 10px;
@@ -63,6 +70,7 @@ const SignUp = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [controlPassword, setControlPassword] = useState('');
+    const admin = ""
 
     const handleRegistrer = async (e) => {
         e.preventDefault();
@@ -82,6 +90,7 @@ const SignUp = () => {
                     userName,
                     email,
                     password,
+                    admin
                 }
             })
             .then((res) => {

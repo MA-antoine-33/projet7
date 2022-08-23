@@ -1,7 +1,7 @@
 import { useState} from 'react';
 import styled from 'styled-components';
 import colors from '../../utils/styles/colors';
-import { FaSearch } from "react-icons/fa";
+
 import { Button } from '../../utils/styles/atoms';
 import { useFetch } from "../../utils/hooks";
 import axios from "axios";
@@ -15,9 +15,12 @@ const DivAllPage = styled.div`
     width: 20%;
     background: linear-gradient(220deg, ${colors.secondary} 40%, ${colors.primaryBis});
     border-radius: 15px;
+    @media (max-width: 767px) {
+        width: 80%;
+      }
 `
 //Style quand le profil est ouvert
-    //style pour la barre de recherche
+  /*  //style pour la barre de recherche
     const DivResearch = styled.div`
         display: flex;
         flex-direction: column;
@@ -52,6 +55,17 @@ const DivAllPage = styled.div`
         margin-top: 10px;
         border: 1px solid black;
     `
+    const ButtonDelete = styled.button`
+    border-radius: 10px;
+    background: linear-gradient(0deg, ${colors.secondary} 30%, ${colors.primary});
+    height: 20px;
+    width: 45%;
+    margin-top: 50px;
+    border: none;
+    &:hover {
+        background: ${colors.primary};
+    } 
+    `*/
     //style pour le profil quand il est ouvert
     const ProfilNav = styled.div`
         display: flex;
@@ -63,35 +77,43 @@ const DivAllPage = styled.div`
         margin-top: 25px;
         width: 100%;
         height: 80%;
+        @media (max-width: 767px) {
+            flex-direction: row;
+          }
+    `
+    const DivButtonUserName = styled.div`
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    `
+    const DivImageUserName = styled.div`
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 40px
     `
     const ImageProfilOpen = styled.img`
         Width: 60%;
         border-radius: 10px;
     `
-    const ButtonDelete = styled.button`
-    border-radius: 10px;
-    background: linear-gradient(0deg, ${colors.secondary} 30%, ${colors.primary});
-    height: 20px;
-    width: 45%;
-    margin-top: 50px;
-    border: none;
-    &:hover {
-        background: ${colors.primary};
-    } 
-    `
-
 //Style quand le profil est fermé
 const OpenProfil = styled.div`
     width: 100px;
     display: flex;
     flex-direction: column;
     background-color: ${colors.secondary};
+
 `
 const ButtonOpenProfil = styled.button`
     background: linear-gradient(135deg, ${colors.secondary} 60%, ${colors.primaryBis});
     border: 1px solid ${colors.tertiary};
     border-radius: 25px;
     padding: 15px;
+    
 `
 const ImageProfil = styled.img`
     border-radius: 80px;
@@ -109,7 +131,7 @@ function DisplayProfil() {
       if (error) {
         return <span>Il y a un problème</span>
       }
-    
+      if (data.admin) {localStorage.setItem("userAdmin", JSON.stringify(data.admin))}
     //Modifier son profil 
     const updateOneUser =  () => {
         window.location.href = "http://localhost:3000/modifyProfil";
@@ -122,32 +144,26 @@ function DisplayProfil() {
         localStorage.clear();
       }
 
-      //supprimer son compte 
+    /*  //supprimer son compte 
       const deleteAccount = () => {
         if (!window.confirm(`Voulez-vous vraiment désactiver le compte ?`)) return;
         axios.get(`http://localhost:4200/api/auth/deleteAccount/${user.userId}`);
         window.location.href = "http://localhost:3000/";
         localStorage.clear();
-      };
+      };*/
 
     return isOpen ? (
-            <DivAllPage className="publication-page">
-                <DivResearch>
-                    <label htmlFor="searchProfil">Trouver l'utilisateur de votre choix :</label>
-                    <DivInputButtonResearch>
-                        <InputResearch type="search" id="searchProfil" name="searchProfil" placeholder=" SonPseudoIci"/>
-                        <ButtonResearch>
-                            <FaSearch />
-                        </ButtonResearch>
-                    </DivInputButtonResearch>
-                </DivResearch>                           
+            <DivAllPage className="publication-page">                          
                 <ProfilNav>
-                    <ImageProfilOpen src={data.imageUrl} alt={data.description}/>
-                    <p>{data.userName}</p>
+                    <DivImageUserName>
+                        <p>{data.userName}</p>
+                        <ImageProfilOpen src={data.imageUrl} alt={data.description}/>
+                    </DivImageUserName>
+                    <DivButtonUserName>
                         <Button id='ButtonModify' onClick={updateOneUser}>Modifier votre profil</Button>
                         <Button id='ButtonSignOut' onClick={logoutHandler}>Se déconnecter</Button>
                         <Button id='ButtonCloseProfil' onClick={() => setIsOpen(false)}>Fermer le profil</Button>
-                        <ButtonDelete id='ButtonDelete' onClick={deleteAccount}>Supprimer son compte</ButtonDelete>
+                    </DivButtonUserName>
                 </ProfilNav>
             </DivAllPage>
     ) : (

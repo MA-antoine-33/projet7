@@ -9,10 +9,18 @@ import colors from "../../utils/styles/colors";
 const AllFormDiv = styled.div`
 background: linear-gradient(${colors.secondary}, ${colors.primaryBis});
 border-radius: 15px 0px 0px 15px;
+@media (max-width: 900px) {
+    border-radius: 15px 15px 0px 0px;
+}
 `
 const ListChoseAll = styled.ul`
     display: flex;
     justify-content: space-around;
+    padding-inline-start: 0px;
+    @media (max-width: 900px) {
+        justify-content: space-between
+        margin: auto;
+    }
 `
 const ListChoseOne = styled.a`
     text-decoration: none;
@@ -21,6 +29,9 @@ const ListChoseOne = styled.a`
     border-radius: 25px;
     &:hover {
         background-color: white;
+    }
+    @media (max-width: 900px) {
+        padding: 5px
     }
 `
 

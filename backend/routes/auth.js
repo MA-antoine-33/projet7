@@ -13,7 +13,7 @@ const multer = require("../middleware/multer-config");
 router.post("/signup", authCtrl.signup);
 router.post("/login", authCtrl.login);
 router.get("/logout", authCtrl.logout);
-router.get("/deleteAccount/:id", authCtrl.deleteAccount);
+//router.get("/deleteAccount/:id", authCtrl.deleteAccount);
 
 
 //On créer les routes pour gérer son profil 

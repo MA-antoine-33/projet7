@@ -4,7 +4,7 @@ import colors from './colors'
 
 const StyledGlobalStyle = createGlobalStyle`
     * {
-        font-family: 'Trebuchet MS', Helvetica, sans-serif;
+        font-family: 'Lato', sans-serif;
     }
         body {
             background-color: ${colors.secondary};

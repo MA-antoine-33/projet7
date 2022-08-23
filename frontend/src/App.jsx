@@ -1,4 +1,4 @@
-import React /*, { useEffect, useState }*/ from "react";
+import React  from "react";
 import { Route, Routes } from 'react-router-dom';
 
 import Header from "./components/header";
@@ -7,20 +7,12 @@ import Profil from "./pages/profil"
 import Publication from "./pages/publication";
 import ModifyProfil from "./components/publication/modifyProfil";
 
-
 import { useFetch } from "./utils/hooks";
 import { UserIdContext } from "./components/appContext";
 import ModifyPost from "./components/post/modifyPost";
-//import axios from "axios";
 
-
-
-//const uId = JSON.parse(localStorage.getItem("user")
 
 const App = () => {
-    /*fetch (`${process.env.REACT_APP_API_URL}api/auth/:id`)
-    .then(response => response.json())
-    .then(userId => console.log(userId));*/
     let userId = ""
   
   const user = JSON.parse(localStorage.getItem("userInfo"))
@@ -37,22 +29,6 @@ const App = () => {
       if (error) {
         return <span>Il y a un problème</span>
       }
-    
- /*   const [uId, setUId]  = useState(null);
-
-    useEffect(() => {
-        const fetchToken = async() => {
-        await axios ({
-            method: "get",
-            url: `${process.env.REACT_APP_API_URL}api/auth/62fa0d4862cae91b27a126b0`,
-        
-        })
-        
-        .then((res) => {setUId(res.data);})
-        .catch((err) => console.log("No Token"));
-        }
-        fetchToken();
-    }, [uId]);*/
 
     return (
         

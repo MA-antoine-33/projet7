@@ -7,6 +7,7 @@ const fs = require('fs');
 const User = require('../models/user');
 const jwt = require ('jsonwebtoken');
 const user = require('../models/user');
+const { post } = require('../routes/publication');
 
 
 
@@ -40,7 +41,6 @@ exports.createPost = (req, res, next) => {
         //...postObjet,
         userId: req.body.userId,
         userName: req.body.userName,
-        
         imageUrl: req.body.imageUrl ?  `${req.protocol}://${req.get('host')}/images/${req.body.imageUrl}`: "",
         like: 0,
         date: req.body.date,
@@ -59,7 +59,6 @@ exports.createPost = (req, res, next) => {
 
 //On créer et exporte le middelware nous permettant de modifier un post existant
 exports.updatePost = (req, res, next) => {
-
     //On commence par regarder si il ya un champs file dans notre requete
     const postObjet = req.file ? {
         //Si c'est le cas, on parse notre chaine de caractère et on recréer l'url de l'image
@@ -70,9 +69,24 @@ exports.updatePost = (req, res, next) => {
       //ensuite on supprime le userId venant de la requete pour éviter que quelqu'un créer un objet a son puis le modifie pour le reassigner à une autre personne
       delete postObjet._userId;
   
+      if (Post.findOne({admin: true})) {
+        Post.findOne({_id: req.params.id})
+        .then((post) => {
+            Post.updateOne({ _id: req.params.id}, {...postObjet, _id: req.params.id})
+            .then(() => res.status(200).json({ message: 'Publication modifiée'}))
+            .catch(error => res.status(401).json({ error}));
+          }
+      )
+      .catch(error => res.status(400).json({ error }));
+      }else{
       //ensuite on cherche notre objet dans la base deonnée pour vérifier que ce soit bien l'utilisateur qui a créer l'objet qui veut le modifier
       Post.findOne({_id: req.params.id})
       .then((post) => {
+        if (req.params.admin === true) {
+          Post.updateOne({ _id: req.params.id}, {...postObjet, _id: req.params.id})
+          .then(() => res.status(200).json({ message: 'Publication modifiée'}))
+          .catch(error => res.status(401).json({ error}));
+        } else {
         //si ce n'est pas le même utilisateur alors message disant que la personne n'est pas autorisé
         if (post.userId != req.auth.userId) {
           req.status(401).json({ message : 'Non-autorisé'});
@@ -81,15 +95,28 @@ exports.updatePost = (req, res, next) => {
           Post.updateOne({ _id: req.params.id}, {...postObjet, _id: req.params.id})
           .then(() => res.status(200).json({ message: 'Publication modifiée'}))
           .catch(error => res.status(401).json({ error}));
-        };
+        };}
       })
       .catch(error => res.status(400).json({ error }));
+    }
   };
   
 
 //On créer et exporte le middelware nous permettant de supprimer un post existante
 exports.deletePost = (req, res, next) => {
-    //On commence par idenfier notre objet pour vérifier si l'id est le même que la personne qui a créé le post
+  if (Post.findOne({admin: true})) {
+    Post.findOne({_id: req.params.id})
+    .then((post) => {
+            //on commence par récuperer le nom de fichier de l'image à supprimer
+            const filename = post.imageUrl.split('/images/')[1];
+            //On utilise la fonction unlink de fs pour supprimer notre enregistrement de la base de donnée
+            fs.unlink(`images/$images${filename}`, () => {
+                Post.deleteOne({_id: req.params.id})
+                .then(() => res.status(200).json({ message: 'Publication supprimée'}))
+                .catch(error => res.status(401).json({ error}));
+            });
+        })
+  } else { //On commence par idenfier notre objet pour vérifier si l'id est le même que la personne qui a créé le post
     Post.findOne({_id: req.params.id})
     .then((post) => {
         //Si ce n'est pas le même id, la personne n'est pas autorisé à le supprimer
@@ -106,7 +133,10 @@ exports.deletePost = (req, res, next) => {
           });
         };
     })
-  .catch(error => res.status(500).json({ error }));
+    .catch(error => res.status(500).json({ error }));}
+  
+   
+  
   };
   
 //On créer et exporte le controller nous permettant de gérer les likes et unliked de notre base de donnée

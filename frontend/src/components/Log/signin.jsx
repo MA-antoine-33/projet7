@@ -12,6 +12,9 @@ const FormAllDivButton = styled.div`
 `
 const FormTitle = styled.h1`
     text-align: center;
+    @media (max-width: 700px) {
+        font-size: 1.5em;
+    }
 `
 const FormAllInputDiv = styled.form`
     display: flex;
@@ -22,7 +25,11 @@ const FormAllInputDiv = styled.form`
     margin-right: 30px;
 `
 const FormOneDiv = styled.div`
-    margin-bottom: 20px
+    margin-bottom: 20px;
+    @media (max-width: 500px) {
+        display: flex;
+        flex-direction: column;
+    }
 `
 const FormLabel = styled.label`
     margin-right: 10px;
@@ -55,6 +62,7 @@ const FormInputButton = styled.input`
 const SignIn = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+   
 
     const handleLogin = (e) => {
         e.preventDefault();
