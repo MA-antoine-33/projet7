@@ -4,8 +4,6 @@ import axios from "axios";
 import { useEffect } from "react";
 
 
-
-//<FontAwesomeIcon icon="fa-solid fa-thumbs-up" />
 //style pour l'ensmeble des posts
 const DivOnePost = styled.article`
     border: 1px solid black;
@@ -74,7 +72,7 @@ const DivOnePost = styled.article`
     `
     const PublicationTextP = styled.p`
         height: 60px;
-        overflow: scroll;
+        overflow: auto;
         padding 5px;
     `
  /*   //Style pour les commentaires
@@ -181,6 +179,7 @@ const Posts = ({postInfo}) => {
                 } else {
                     setImageLoad(false)}
                 })
+            // eslint-disable-next-line react-hooks/exhaustive-deps
             }, [])
             //Je créer l'itérations pour pouvoir faire chaque post avec map dans le fichier allposts
             for (let i = 0, l = data.length; i < l; i++) {
@@ -191,9 +190,11 @@ const Posts = ({postInfo}) => {
                     postInfo.dislike = data[i].dislike;
                     postInfo.userName = data[i].userName;
                     postInfo.imageUrl = data[i].imageUrl;
-                    postInfo.date = data[i].date;}
+                    postInfo.date = data[i].date;
+                    postInfo.usersLiked = data[i].usersLiked;
+                    postInfo.usersDisliked = data[i].usersDisliked;}
                 }
-               
+             
                
     //Supprimer un post
     const deletePost = async (e) => {
@@ -214,42 +215,53 @@ const Posts = ({postInfo}) => {
         localStorage.setItem("postId", JSON.stringify(postInfo.Objectid))
         window.location.href = "http://localhost:3000/modifyPost";
     }
+    //Ajouter un like
     const addLike = (e) => {
         e.preventDefault();
          axios({
-            method: "patch",
-            url: `${process.env.REACT_APP_API_URL}api/publication/${postInfo.Objectid}/likes`,
+            method: "post",
+            url: `${process.env.REACT_APP_API_URL}api/publication/${postInfo.Objectid}/likes/like`,
             data: {
                 postId: postInfo.Objectid,
-                
-                userId: data._id,
-                like: postInfo.like ++,
-                email: data.email,
+                userName: postInfo.userName,
+                description: postInfo.description,
+                userId: user.userId,
+                usersLiked: postInfo.usersLiked,
+                usersDisliked: postInfo.usersDisliked,
+                like: postInfo.like,
+                dislike: postInfo.dislike 
             },
             headers: headers
         })
+        .then(window.location.reload())
+        
             console.log(postInfo)
-        console.log("ajouter")
+            console.log("ajouter")
+            console.log("userliked : ", postInfo.usersLiked) 
+            
     }
-    //Fonction pour gérer les je n'aime pas
+//Fonction pour gérer les je n'aime pas
   const addUnlike = (e) => {
        
         e.preventDefault();
         axios({
-           method: "patch",
-           url: `${process.env.REACT_APP_API_URL}api/publication/${postInfo.Objectid}/likes`,
+           method: "post",
+           url: `${process.env.REACT_APP_API_URL}api/publication/${postInfo.Objectid}/likes/dislike`,
            data: {
-            postId: postInfo.Objectid,
-               userId: data._id,
-               dislike: postInfo.dislike,
-               email: data.email,
+                postId: postInfo.Objectid,
+                userName: postInfo.userName,
+                description: postInfo.description,
+                userId: user.userId,
+                usersLiked: postInfo.usersLiked,
+                usersDisliked: postInfo.usersDisliked,
+                like: postInfo.like,
+                dislike: postInfo.dislike 
            },
            headers: headers
        })
-       .then(localStorage.setItem("postId", JSON.stringify(postInfo.Objectid)))
-       
-           console.log(postInfo)
+       .then(window.location.reload())
         console.log("Je n'aime pas")
+        console.log(postInfo.like)
     }
 
 return (
@@ -280,6 +292,7 @@ return (
         </DivTextPost>
         <DivLikeUnlike>
             <ButtonLikes onClick={addLike}>J'aime </ButtonLikes>
+            
             <CountNumberLike>{postInfo.like}</CountNumberLike>
             <ButtonUnlikes onClick={addUnlike}>Je n'aime pas</ButtonUnlikes>
             <CountNumberUnlike>{postInfo.dislike}</CountNumberUnlike>

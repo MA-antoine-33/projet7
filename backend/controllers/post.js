@@ -1,7 +1,3 @@
-//router.get("/images/:id", auth, postCtrl.getOneImage);
-//router.patch("/:id/likes", auth, postCtrl.likes);
-//router.post("/:id/postLike", auth, postCtrl.postLike);
-//router.post("/:id/likes", auth, postCtrl.countLikes);
 const Post = require('../models/publication');
 const fs = require('fs');
 const User = require('../models/user');
@@ -26,19 +22,32 @@ exports.getAllPosts = (req, res, next) => {
         .catch(error => res.status(400).json({ error }));
       };
 
+/*exports.downloadImage = (req, res, next) => {
+   //On commencer par parser notre objet pour l'utiliser avec multer
+    const postObjet = JSON.parse(req.body.post);
+    //On supprime les données qui seront générées automatiquement
+    const images = new images ({
+        userId: req.body.userId,
+        userName: req.body.userName,
+        imageUrl: req.body.imageUrl ?  `${req.protocol}://${req.get('host')}/images/${req.body.imageUrl}`: "",
+    })
+    
+   
+    //On enregistre notre objet dans la base de donnée
+    images.save()
+    .then(() => res.status(201).json({message : 'Publication enregistrée'}))
+    .catch(error => res.status(400).json({ error }));
+
+};*/
+
 //On créer et exporte le controllers nous permettant de créer un post
 exports.createPost = (req, res, next) => {
-  
-  
     //On commencer par parser notre objet pour l'utiliser avec multer
-    /*const postObjet = JSON.parse(req.body.post);
-    //On supprime les données qui seront générées automatiquement
-    delete postObjet._id;
-    delete postObjet._userId;*/
+    const postObjet = req.body.post;    
   
     //On créer donc notre objet avec les données remplis, on génére notre url d'images, on met les compteurs de like à 0 et les tableaux usersLiked vides
     const post = new Post({
-        //...postObjet,
+        ...postObjet,
         userId: req.body.userId,
         userName: req.body.userName,
         imageUrl: req.body.imageUrl ?  `${req.protocol}://${req.get('host')}/images/${req.body.imageUrl}`: "",
@@ -53,8 +62,7 @@ exports.createPost = (req, res, next) => {
       post.save()
       .then(() => res.status(201).json({message : 'Publication enregistrée'}))
       .catch(error => res.status(400).json({ error }));
-    
-    
+
   };
 
 //On créer et exporte le middelware nous permettant de modifier un post existant
@@ -140,12 +148,168 @@ exports.deletePost = (req, res, next) => {
   };
   
 //On créer et exporte le controller nous permettant de gérer les likes et unliked de notre base de donnée
-exports.likes = (req, res, next) => {
-    const like = req.body.like;
+exports.like = (req, res, next) => {
+    let like = req.body.like;
     const userId = req.body.userId;
-    const postId = req.params.id;
- 
-     //condition quand on met un like
+    const postId = req.body.postId;
+    let dislike = req.body.dislike;
+    const usersLiked = req.body.usersLiked;
+    const usersDisliked = req.body.usersDisliked;
+  /*  console.log("Id de l'object: ", req.body.postId)
+console.log("tableau likes", usersLiked)
+console.log("id", userId)
+console.log("id dans le tableau", usersLiked.includes(userId))*/
+
+    if (usersLiked.includes(userId)) {
+      Post.findOne({_id: req.params.id})
+        .then((post) => {
+          Post.updateOne (
+            { _id: postId},
+            { description: req.body.description,
+              userName: req.body.userName,
+              userId: req.body.userId
+            }
+          )
+          
+          post.like = post.like - 1;
+          post.usersLiked.pull(req.body.userId);
+          like = like - 1;
+          delete usersLiked[req.body.userId];
+          post.save()
+          .then(() => res.status(200).json({message: "publication déjà liké et unliké"}))
+          .catch((error) => res.status(400).json({ error }))
+        })
+       
+      .catch(error => res.status(400).json({ error }));
+
+    } else {
+      if (usersDisliked.includes(userId)) {
+        Post.findOne({_id: req.params.id})
+          .then((post) => {
+            Post.updateOne (
+              { _id: postId},
+              { description: req.body.description,
+                userName: req.body.userName,
+                userId: req.body.userId
+              }
+            )
+            post.like = post.like + 1;
+            post.dislike = post.dislike - 1;
+            post.usersLiked.push(req.body.userId);
+            post.usersDisliked.pull(req.body.userId);
+            like = like + 1;
+            dislike = dislike - 1;
+            usersLiked.push(req.body.userId);
+            delete usersDisliked[req.body.userId];
+
+            post.save()
+            .then(() => res.status(200).json({message: "j'aime ajouté et je n'aime pas supprimé"}))
+            .catch((error) => res.status(400).json({ error }))
+          })
+          .catch(error => res.status(400).json({ error }));
+
+      } else {
+        Post.findOne({_id: req.params.id})
+          .then((post) => {
+            Post.updateOne (
+              { _id: postId},
+              { description: req.body.description,
+                userName: req.body.userName,
+                userId: req.body.userId
+              }
+            )
+            post.like = post.like + 1;
+            post.usersLiked.push(req.body.userId);
+            like = like + 1;
+            usersLiked.push(req.body.userId);
+
+            post.save()
+          .then(() => res.status(200).json({message: "j'aime ajouté"}))
+          .catch((error) => res.status(400).json({ error }))
+          })
+        .catch(error => res.status(400).json({ error }));
+      }
+    }
+};
+
+exports.dislike = (req, res, next) => {
+  let like = req.body.like;
+  const userId = req.body.userId;
+  const postId = req.body.id;
+  let dislike = req.body.dislike;
+  const usersLiked = req.body.usersLiked;
+  const usersDisliked = req.body.usersDisliked;
+
+  if (usersDisliked.includes(userId)) {
+    Post.findOne({_id: req.params.id})
+      .then((post) => {
+        Post.updateOne(
+          { _id: postId},
+          { description: req.body.description,
+            userName: req.body.userName,
+            userId: req.body.userId 
+          }
+        )
+        post.dislike = post.dislike - 1;
+        post.usersDisliked.pull(req.body.userId);
+        dislike = dislike - 1;
+        delete usersDisliked[req.body.userId];
+        post.save()
+        .then(() => res.status(200).json({message: "publication déjà unliké"}))
+        .catch((error) => res.status(400).json({ error }))
+      })
+     .catch(() => res.status(400).json( "publication déjà disliké"))
+
+  } else {
+    if (usersLiked.includes(userId)) {
+      Post.findOne({_id: req.params.id})
+        .then((post) => {
+          Post.updateOne (
+            { _id: postId},
+            { description: req.body.description,
+              userName: req.body.userName,
+              userId: req.body.userId
+            }
+          )
+          post.dislike = post.dislike + 1;
+          post.like = post.like - 1;
+          post.usersDisliked.push(req.body.userId);
+          post.usersLiked.pull(req.body.userId);
+          dislike = dislike + 1;
+          like = like - 1;
+          usersDisliked.push(req.body.userId);
+          delete usersLiked[req.body.userId];
+
+          post.save()
+          .then(() => res.status(200).json({message: "j'aime retiré et je n'aime pas ajouté"}))
+          .catch((error) => res.status(400).json({ error }))
+        })
+        .catch(error => res.status(400).json({ error }));
+
+    } else {
+      Post.findOne({_id: req.params.id})
+        .then((post) => {
+          Post.updateOne (
+            { _id: postId},
+            { description: req.body.description,
+              userName: req.body.userName,
+              userId: req.body.userId
+            }
+          )
+          post.dislike = post.dislike + 1;
+          post.usersDisliked.push(req.body.userId);
+          dislike = dislike + 1;
+          usersDisliked.push(req.body.userId);
+
+          post.save()
+          .then(() => res.status(200).json({message: "je n'aime pas ajouté"}))
+          .catch((error) => res.status(400).json({ error }))
+        })
+        .catch(error => res.status(400).json({ error }));
+    }
+  }
+};   
+    /* //condition quand on met un like
     if (like === 1) {
      Post.updateOne(
        { _id: postId},
@@ -194,5 +358,4 @@ exports.likes = (req, res, next) => {
          }
        })
        .catch((error) => res.status(400).json({ error }))
-    }
- };
+    }*/

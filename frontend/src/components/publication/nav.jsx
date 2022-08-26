@@ -13,10 +13,13 @@ const DivAllPage = styled.div`
     flex-direction: column;
     align-items: center;
     width: 20%;
+    border: 1px solid black;
     background: linear-gradient(220deg, ${colors.secondary} 40%, ${colors.primaryBis});
     border-radius: 15px;
     @media (max-width: 767px) {
         width: 80%;
+        margin-bottom: 25px;
+        
       }
 `
 //Style quand le profil est ouvert

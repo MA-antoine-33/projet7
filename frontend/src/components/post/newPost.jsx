@@ -40,7 +40,7 @@ const NewPostDiv = styled.div`
         align-items: center;
     `
     const InputForImageUrl = styled.input`
-        width: 60%;
+        width: 95%;
         border: none;
         border-radius: 10px;
         background-color: ${colors.secondary};
@@ -66,6 +66,8 @@ const NewPost = () => {
     const [validationPost, setValidationPost] = useState(false)
     const [description, setDescription] = useState('');
     const [imageUrl, setImageUrl] = useState('');
+   
+    
     //Initialisation de la date
     let dates = new Date();
     let dateDay = (dates.getDate() + "/" + (dates.getMonth() + 1) + "/"+ dates.getFullYear() + " à " + dates.getHours() + "h " + dates.getMinutes() + "min" )
@@ -90,7 +92,9 @@ const NewPost = () => {
         e.preventDefault();
         const descriptionError = document.querySelector(".descriptionError");
         const imageUrlError = document.querySelector(".imageUrlError");
-        const userName = data.userName
+        const userName = data.userName;
+        //const fileName = document.getElementById('ImageNewPost').files[0];
+        
         axios({
             method: "post",
             url: `${process.env.REACT_APP_API_URL}api/publication/create`,
@@ -98,10 +102,8 @@ const NewPost = () => {
                 userName,
                 userId,
                 description,
-                imageUrl,
+                imageUrl: imageUrl,
                 date: dateDay,
-                like: 0,
-                dislike: 0
             },
             headers: headers
         })  
@@ -124,7 +126,7 @@ const NewPost = () => {
                 <TextContentNewPost id="textNewPost" placeholder=" Ici vous pouvez tout partager avec vos collègues" onChange={(e) => setDescription(e.target.value)} value={description}/>
                 <div className="descriptionError"></div>
                 <DivButtonNewPost>
-                    <InputForImageUrl id="ImageNewPost"type='text' placeholder="Rentrer l'url de votre image" onChange={(e) => setImageUrl(e.target.value)} value={imageUrl}/>
+                    <InputForImageUrl id="ImageNewPost" type='file' accept="image/*" onChange={(e) => setImageUrl(e.target.value)} value={imageUrl}/>
                     <div className="imageUrlError"></div>
                     <Button id='ButtonPublishNewPost' onClick={publishNewPost}>Publier</Button>
                 </DivButtonNewPost>  

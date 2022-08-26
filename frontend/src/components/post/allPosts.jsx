@@ -41,7 +41,7 @@ const AllPosts = () => {
         <DivAllPage className="publication-page">   
                 <AllPostDisplay id="allPostDisplay">        
                     <ListUlAll>
-                        {data.map((postInfo, index) => (
+                        {data.slice(0).reverse().map((postInfo, index) => (
                             <Posts key={index} postInfo={postInfo} />
                         ))}
                     </ListUlAll>

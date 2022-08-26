@@ -26,8 +26,10 @@ const FormPostDiv = styled.div`
     align-items: center;
     margin-top: 20px;
     width: 100%;
+    @media (max-width: 767px) {
+        flex-direction: column;
+    }
 `
-
     //style pour la partie contenue de la nouvelle publication
     const TextContentNewPost = styled.textarea`
         font-size: 1em;
@@ -36,6 +38,10 @@ const FormPostDiv = styled.div`
         background-color: ${colors.tertiaryBis};
         padding: 7px;
         margin-right: 10px;
+        width: 45%;
+        @media (max-width: 767px) {
+            margin-bottom: 20px;
+        }
         `
     const InputForImageUrl = styled.input`
         width: 30%;
@@ -69,7 +75,7 @@ const ModifyPost = () => {
     let userId = ""
     //Initialisation de la date
     let dates = new Date();
-    let dateDay = (dates.getDate() + "/" + dates.getMonth() + "/"+ dates.getFullYear() + " à " + dates.getHours() + "h " + dates.getMinutes() + "min" )
+    let dateDay = (dates.getDate() + "/" + (dates.getMonth() + 1) + "/"+ dates.getFullYear() + " à " + dates.getHours() + "h " + dates.getMinutes() + "min" )
    
     const user = JSON.parse(localStorage.getItem("userInfo"))
     if (user) {
@@ -122,7 +128,7 @@ const ModifyPost = () => {
     return(
         <DivAllPage className="publication-page">       
             <FormAllInputDiv action="" onSubmit={updateOnePost} id="modifyForm">
-                <p>Modifier votre pblication {data.userName}</p>
+                <p>Modifier votre publication {data.userName}</p>
                 <FormPostDiv>
                     <TextContentNewPost id="textNewPost" placeholder=" Ici vous pouvez tout partager avec vos collègues" onChange={(e) => setDescription(e.target.value)} value={description}/>
                         <div className="descriptionError"></div>
