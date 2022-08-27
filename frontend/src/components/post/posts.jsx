@@ -233,12 +233,7 @@ const Posts = ({postInfo}) => {
             },
             headers: headers
         })
-        .then(window.location.reload())
-        
-            console.log(postInfo)
-            console.log("ajouter")
-            console.log("userliked : ", postInfo.usersLiked) 
-            
+        .then(window.location.reload())           
     }
 //Fonction pour gérer les je n'aime pas
   const addUnlike = (e) => {
@@ -260,8 +255,6 @@ const Posts = ({postInfo}) => {
            headers: headers
        })
        .then(window.location.reload())
-        console.log("Je n'aime pas")
-        console.log(postInfo.like)
     }
 
 return (
@@ -292,7 +285,6 @@ return (
         </DivTextPost>
         <DivLikeUnlike>
             <ButtonLikes onClick={addLike}>J'aime </ButtonLikes>
-            
             <CountNumberLike>{postInfo.like}</CountNumberLike>
             <ButtonUnlikes onClick={addUnlike}>Je n'aime pas</ButtonUnlikes>
             <CountNumberUnlike>{postInfo.dislike}</CountNumberUnlike>

@@ -67,7 +67,7 @@ const FormPostDiv = styled.div`
         background-color: green;
     } 
 `
-
+//On créer notre fonction pour modifier notre publication
 const ModifyPost = () => {
     const [description, setDescription] = useState('');
     const [imageUrl, setImageUrl] = useState('');
@@ -76,7 +76,7 @@ const ModifyPost = () => {
     //Initialisation de la date
     let dates = new Date();
     let dateDay = (dates.getDate() + "/" + (dates.getMonth() + 1) + "/"+ dates.getFullYear() + " à " + dates.getHours() + "h " + dates.getMinutes() + "min" )
-   
+   //On récupère les données de l'utilisateurs et les tokens
     const user = JSON.parse(localStorage.getItem("userInfo"))
     if (user) {
         userId = user.userId
@@ -92,13 +92,13 @@ const ModifyPost = () => {
       
     const postIdStorage = JSON.parse(localStorage.getItem("postId"))
     
-
+    //On créer le lien avec le backend quand on clique sur le bouton modifier
     const updateOnePost = async (e) => {
         e.preventDefault();
              
         const descriptionError = document.querySelector(".descriptionError");
         const imageUrlError = document.querySelector(".imageUrlError");
-
+        //On envoie les nouvelles données modifiéés
         await axios({
             method: "put",
             url: `${process.env.REACT_APP_API_URL}api/publication/${postIdStorage}`,
@@ -121,8 +121,7 @@ const ModifyPost = () => {
                 window.location.href = "http://localhost:3000/publication";
             }
         })
-        .catch((err) => {console.log(err)});
-        
+        .catch((err) => {console.log(err)});       
     }
 
     return(

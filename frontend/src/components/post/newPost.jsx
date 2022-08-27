@@ -84,17 +84,44 @@ const NewPost = () => {
       )
       if (error) {
         return <span>Il y a un problème</span>
-      }
-    
-    const userId = user.userId
+      };
+      const userId = user.userId
+
+//test image**********************************************************************************************************
+      const test64 = (e) => {
+        const reader = new FileReader();
+
+        reader.addEventListener("load", () => {
+            console.log(reader.result)
+            localStorage.setItem("recentImage", reader.result);
+        }, false)
+        
+        const fileImage = document.getElementById('ImageNewPost').files[0];
+        reader.readAsDataURL(fileImage);
+       };
+
+  
     //On créer la fonction qui va appeler l'API pour créer une publication
     const publishNewPost = (e) => {
-        e.preventDefault();
+        //e.preventDefault();
         const descriptionError = document.querySelector(".descriptionError");
         const imageUrlError = document.querySelector(".imageUrlError");
         const userName = data.userName;
-        //const fileName = document.getElementById('ImageNewPost').files[0];
+        const recentImage = localStorage.getItem("recentImage")
+       
+        const fileImage = document.getElementById('ImageNewPost').files[0];
+       
+       // console.log("Le fichier : ", fileImage)
+        //console.log(fileImage.name)
+        //localStorage.removeItem("fileLocalImage");
+        //localStorage.setItem("fileLocalImage", JSON.stringify(fileImage))
         
+        //const localStorageImage = JSON.parse(localStorage.getItem("fileLocalImage"))
+        
+        //console.log("Mon local storage avec le fichier: ", localStorageImage)
+        //console.log("valeur de imageUrl", imageUrl)
+        //console.log(fileImage.name)
+        console.log(fileImage)
         axios({
             method: "post",
             url: `${process.env.REACT_APP_API_URL}api/publication/create`,
@@ -102,8 +129,10 @@ const NewPost = () => {
                 userName,
                 userId,
                 description,
-                imageUrl: imageUrl,
+                imageUrl: fileImage.name,
                 date: dateDay,
+                file: recentImage,
+                typeFile: fileImage.type,
             },
             headers: headers
         })  
@@ -113,7 +142,9 @@ const NewPost = () => {
                     imageUrlError.innerHTML = res.data.errors.imageURL;
                 } else {
                     setValidationPost(true)
-                    window.location.reload()
+                    console.log("les datas envoyées", data.file)
+                    
+                    //window.location.reload()
                 }
             })
             .catch((err) => {console.log(err)})}
@@ -126,7 +157,7 @@ const NewPost = () => {
                 <TextContentNewPost id="textNewPost" placeholder=" Ici vous pouvez tout partager avec vos collègues" onChange={(e) => setDescription(e.target.value)} value={description}/>
                 <div className="descriptionError"></div>
                 <DivButtonNewPost>
-                    <InputForImageUrl id="ImageNewPost" type='file' accept="image/*" onChange={(e) => setImageUrl(e.target.value)} value={imageUrl}/>
+                    <InputForImageUrl id="ImageNewPost" type='file' accept="image/*" onChange={(e) => {test64(); setImageUrl(e.target.value)}} value={imageUrl}/>
                     <div className="imageUrlError"></div>
                     <Button id='ButtonPublishNewPost' onClick={publishNewPost}>Publier</Button>
                 </DivButtonNewPost>  

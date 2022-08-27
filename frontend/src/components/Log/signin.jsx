@@ -58,12 +58,11 @@ const FormInputButton = styled.input`
         color: black;
     } 
 `
-
+//On créer notre fonction pour se connecter
 const SignIn = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-   
-
+   //On envoie les identifiants au back pour qu'il les vérifie et nous valide l'accés
     const handleLogin = (e) => {
         e.preventDefault();
         const emailError = document.querySelector(".emailError");
@@ -84,9 +83,6 @@ const SignIn = () => {
                 localStorage.setItem("userInfo", JSON.stringify(res.data))
                 console.log(res)
                 window.location = '/publication'
-                
-                
-                //localStorage.setItem(userInfo, res).stringify
             }
         })
         .catch((err) => {console.log(err)});

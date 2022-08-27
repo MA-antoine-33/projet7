@@ -54,26 +54,6 @@ exports.login = (req, res, next) => {
     .catch(error => res.status(500).json({ error }));
 };
 
-/*//Fonction pour supprimer un utilisateur
-exports.deleteAccount = (req, res, next) => {
-    User.findOne({ email: req.body.email})
-      .then((user) => {
-        if (user.imageUrl !== null) {
-          // Si photo de profil présente on la supprime du répertoire, puis on supprime l'user de la BDD
-          const filename = user.imageUrl.split("/images/")[1];
-          fs.unlink(`images/${filename}`, () => {
-            db.User.destroy({ where: { id: req.params._id } });
-            res.status(200).json({ message: "Compte supprimé !" });
-          });
-        } else { // Sinon on supprime uniquement l'user
-          db.User.destroy({ where: { id: req.params.id } });
-          res.status(200).json({ message: "Compte supprimé !" });
-        }
-      })
-  
-      .catch((error) => res.status(500).json({ error }));
-  };*/
-
 //Fonction pour se deconnecter
 exports.logout = (req, res) => {
     res.clearCookie("jwt");

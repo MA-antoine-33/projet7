@@ -34,7 +34,7 @@ const ListChoseOne = styled.a`
         padding: 5px
     }
 `
-
+//Fonction qui nous permet de switcher entre se connecter et s'inscrire
 const Login = ( props ) => {
     const [signUpModal, setSignUpModal] = useState(props.signup);
     const [signInModal, setSignInModal] = useState(props.signin);
