@@ -13,7 +13,14 @@ const DivOnePost = styled.article`
 `
     //Style pour l'image
     const DivPostImage = styled.div`
-        border: 1px solid black;
+        text-align: center;
+        max-height: 500px;
+       
+    `
+    const ImagePost = styled.img`
+        border-radius: 10px;
+        height: 100%;
+        object-fit: cover;     
     `
     //Style pour les infos sur l'utilisateur
     const DivUserInfo = styled.div`
@@ -75,35 +82,6 @@ const DivOnePost = styled.article`
         overflow: auto;
         padding 5px;
     `
- /*   //Style pour les commentaires
-    const DivComment = styled.div`
-        display: flex;
-        justify-content: space-between;
-        width: 100%;
-        margin-top: 10px;
-    `
-        const TextComment = styled.textarea`
-            color: black;
-            background-color: rgba(235, 215, 215, 0.60);
-            width: 80%;
-            border: 1px solid rgba(249, 255, 225, 0.548);
-            border-radius: 10px;
-        `
-        const ButtonAddComment = styled.button`
-            border-radius: 10px;
-            background: linear-gradient(0deg, #FFD7D7 30%, #ff8f77);
-            height: 25px;
-            width: 20%;
-            margin-top: 10px;
-            margin-bottom: 10px;
-            border: none;
-            &:hover {
-                background: #ff8f77;
-            }
-        `
-        const DivShowComment = styled.div`
-            margin-top: 10px;
-        `*/
 //Style général pour les likes unlikes
 const DivLikeUnlike = styled.div`
    display: flex;
@@ -186,6 +164,7 @@ const Posts = ({postInfo}) => {
                 if (postInfo._id === data[i]._id){
                     postInfo.Objectid = data[i]._id;
                     postInfo.userId = data[i].userId;
+                    postInfo.description = data[i].description;
                     postInfo.like = data[i].like;
                     postInfo.dislike = data[i].dislike;
                     postInfo.userName = data[i].userName;
@@ -194,8 +173,7 @@ const Posts = ({postInfo}) => {
                     postInfo.usersLiked = data[i].usersLiked;
                     postInfo.usersDisliked = data[i].usersDisliked;}
                 }
-             
-               
+           
     //Supprimer un post
     const deletePost = async (e) => {
         await axios({
@@ -213,6 +191,8 @@ const Posts = ({postInfo}) => {
     //Modifier un post
     const updateOnePost =  () => {
         localStorage.setItem("postId", JSON.stringify(postInfo.Objectid))
+        localStorage.setItem("postImageUrl", JSON.stringify(postInfo.imageUrl))
+        localStorage.setItem("postDescription", JSON.stringify(postInfo.description))
         window.location.href = "http://localhost:3000/modifyPost";
     }
     //Ajouter un like
@@ -235,27 +215,27 @@ const Posts = ({postInfo}) => {
         })
         .then(window.location.reload())           
     }
-//Fonction pour gérer les je n'aime pas
-  const addUnlike = (e) => {
-       
-        e.preventDefault();
-        axios({
-           method: "post",
-           url: `${process.env.REACT_APP_API_URL}api/publication/${postInfo.Objectid}/likes/dislike`,
-           data: {
-                postId: postInfo.Objectid,
-                userName: postInfo.userName,
-                description: postInfo.description,
-                userId: user.userId,
-                usersLiked: postInfo.usersLiked,
-                usersDisliked: postInfo.usersDisliked,
-                like: postInfo.like,
-                dislike: postInfo.dislike 
-           },
-           headers: headers
-       })
-       .then(window.location.reload())
-    }
+    //Fonction pour gérer les je n'aime pas
+    const addUnlike = (e) => {
+        
+            e.preventDefault();
+            axios({
+            method: "post",
+            url: `${process.env.REACT_APP_API_URL}api/publication/${postInfo.Objectid}/likes/dislike`,
+            data: {
+                    postId: postInfo.Objectid,
+                    userName: postInfo.userName,
+                    description: postInfo.description,
+                    userId: user.userId,
+                    usersLiked: postInfo.usersLiked,
+                    usersDisliked: postInfo.usersDisliked,
+                    like: postInfo.like,
+                    dislike: postInfo.dislike 
+            },
+            headers: headers
+        })
+        .then(window.location.reload())
+        }
 
 return (
     <DivOnePost>
@@ -263,7 +243,7 @@ return (
             <div></div>
         ) : (
             <DivPostImage>
-                <img src={postInfo.imageUrl} alt="imge correspondant à la publication" />
+                <ImagePost src={postInfo.imageUrl} alt="imge correspondant à la publication" />
             </DivPostImage>
         )} 
             <DivUserInfo>
@@ -293,12 +273,4 @@ return (
     </DivOnePost>
     );
 };
-/* <DivComment>
-            <TextComment placeholder="Commentez ici..."></TextComment>
-            <ButtonAddComment>Poster votre commentaire</ButtonAddComment>
-        </DivComment>
-        <DivShowComment>
-            <ButtonAddComment>Voir tous les commentaires</ButtonAddComment>
-            <div className="allCommentDisplay">Tous les commentaires </div>
-        </DivShowComment>  */
 export default Posts;

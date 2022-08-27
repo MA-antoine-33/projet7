@@ -69,8 +69,8 @@ const FormPostDiv = styled.div`
 `
 //On créer notre fonction pour modifier notre publication
 const ModifyPost = () => {
-    const [description, setDescription] = useState('');
-    const [imageUrl, setImageUrl] = useState('');
+    let [description, setDescription] = useState('');
+    let [imageUrl, setImageUrl] = useState('');
     const userAdmin = JSON.parse(localStorage.getItem("userAdmin"));
     let userId = ""
     //Initialisation de la date
@@ -89,8 +89,20 @@ const ModifyPost = () => {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       }
-      
-    const postIdStorage = JSON.parse(localStorage.getItem("postId"))
+    //On récupère les données de l'utilisateur  
+    const postIdStorage = JSON.parse(localStorage.getItem("postId"));
+   // const postImageUrlStorage = JSON.parse(localStorage.getItem("postImageUrl"));
+    const postDescriptionStorage = JSON.parse(localStorage.getItem("postDescription"));
+ 
+    //On créer une fonction pour stocker les convertir les images en 64bytes et pouvoir les retraduire dans le back
+    const test64 = (e) => {
+        const reader = new FileReader();
+        reader.addEventListener("load", () => {
+            localStorage.setItem("recentImage", reader.result);
+        }, false)
+        const fileImage = document.getElementById('ImageNewPost').files[0];
+        reader.readAsDataURL(fileImage);
+       };
     
     //On créer le lien avec le backend quand on clique sur le bouton modifier
     const updateOnePost = async (e) => {
@@ -98,16 +110,38 @@ const ModifyPost = () => {
              
         const descriptionError = document.querySelector(".descriptionError");
         const imageUrlError = document.querySelector(".imageUrlError");
+        const recentImage = localStorage.getItem("recentImage")
+        const fileImage = document.getElementById('ImageNewPost').files[0];
+
+        //On créer des conditions pour garder nos précédentes valeurs si l'utilisateurs ne rentre pas de nouvelles données
+        let descriptionToAdd = "";
+        if (description === "") {
+            descriptionToAdd = postDescriptionStorage;
+        } else  {
+            descriptionToAdd = description
+        }
+        let imageUrlToAdd = "";
+        let typeFileToAdd = "";
+        if (imageUrl === "" || imageUrl === null || imageUrl === undefined) {
+            imageUrlToAdd = "";
+            typeFileToAdd = "";
+        } else {
+            imageUrlToAdd = fileImage.name;
+            typeFileToAdd = fileImage.type;
+        }
+        
         //On envoie les nouvelles données modifiéés
         await axios({
             method: "put",
             url: `${process.env.REACT_APP_API_URL}api/publication/${postIdStorage}`,
             data: {
                 userId: data._id,
-                description: description,
-                imageUrl: imageUrl,
+                description: descriptionToAdd ,
                 email: data.email,
+                imageUrl: imageUrlToAdd,
                 date: dateDay,
+                file: recentImage,
+                typeFile: typeFileToAdd,
                 admin: userAdmin
             },
             headers: headers
@@ -118,6 +152,9 @@ const ModifyPost = () => {
                 imageUrlError.innerHTML = res.data.errors.imageUrl; 
             } else {
                 localStorage.removeItem("postId")
+                localStorage.removeItem("postImageUrl")
+                localStorage.removeItem("postDescription")
+                localStorage.removeItem("recentImage")
                 window.location.href = "http://localhost:3000/publication";
             }
         })
@@ -129,9 +166,9 @@ const ModifyPost = () => {
             <FormAllInputDiv action="" onSubmit={updateOnePost} id="modifyForm">
                 <p>Modifier votre publication {data.userName}</p>
                 <FormPostDiv>
-                    <TextContentNewPost id="textNewPost" placeholder=" Ici vous pouvez tout partager avec vos collègues" onChange={(e) => setDescription(e.target.value)} value={description}/>
+                    <TextContentNewPost id="textNewPost" placeholder=" Ici vous pouvez tout partager avec vos collègues" onChange={(e) => setDescription(e.target.value)} value={description} />
                         <div className="descriptionError"></div>
-                    <InputForImageUrl id="ImageNewPost"type='text' placeholder="Rentrer l'url de votre image" onChange={(e) => setImageUrl(e.target.value)} value={imageUrl}/>
+                    <InputForImageUrl id="ImageNewPost" type='file' accept="image/*" onChange={(e) => {test64(); setImageUrl(e.target.value)}} value={imageUrl}/>
                         <div className="imageUrlError"></div>      
                 </FormPostDiv>
                 <FormInputButton type="submit" id='ButtonPublishNewPost' value="Mettre à jour" /> 
