@@ -63,7 +63,7 @@ const ValidSignUp = styled.h3`
     text-align: center;
     color: green;
 `
-
+//On créer notre fonction pour s'inscrire
 const SignUp = () => {
     const [formSubmit, setFormSubmit] = useState(false);
     const [userName, setUserName] = useState('');
@@ -72,6 +72,7 @@ const SignUp = () => {
     const [controlPassword, setControlPassword] = useState('');
     const admin = ""
 
+    //On envoir le formulaire au back pour qu'il enregistre ce nouvel utilisateur s'il correspond aux critères
     const handleRegistrer = async (e) => {
         e.preventDefault();
         const userNameError = document.querySelector(".userNameError");
@@ -107,7 +108,6 @@ const SignUp = () => {
     }
 
     return(
-        
        <div className="connection-form">
         {formSubmit ? (
             <>

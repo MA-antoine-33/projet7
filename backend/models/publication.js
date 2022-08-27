@@ -13,7 +13,8 @@ const postSchema = mongoose.Schema({
     like: { type: Number },
     dislike: { type: Number},
     usersLiked: { type: [String] },
-    usersDisliked: { type: [String] }
+    usersDisliked: { type: [String] },
+    file: { type: String }
 });
 
 //On exporte notre schéma en tant que Post

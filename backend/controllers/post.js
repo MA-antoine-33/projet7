@@ -43,8 +43,15 @@ exports.getAllPosts = (req, res, next) => {
 //On créer et exporte le controllers nous permettant de créer un post
 exports.createPost = (req, res, next) => {
     //On commencer par parser notre objet pour l'utiliser avec multer
-    const postObjet = req.body.post;    
-  
+    const postObjet = req.body.post;   
+    
+    //let extension = req.body.imageUrl.split(".")[1];
+    let base64Image = req.body.file.replace(`data:${req.body.typeFile};base64,`, "");
+    let buff = Buffer.from(base64Image, 'base64');
+    console.log("base à transformer", base64Image)
+    fs.writeFileSync(`./images/${req.body.imageUrl}`, buff);
+
+
     //On créer donc notre objet avec les données remplis, on génére notre url d'images, on met les compteurs de like à 0 et les tableaux usersLiked vides
     const post = new Post({
         ...postObjet,
@@ -56,8 +63,38 @@ exports.createPost = (req, res, next) => {
         description: req.body.description,
         dislike: 0,
         usersLiked: [],
-        usersDisliked: []
+        usersDisliked: [],
+        file: req.body.file
       });
+
+     
+      /*data        = fs.readFileSync('base64', 'utf8'),
+      base64Data,
+      binaryData;
+      base64Data  =   data.replace(/^data:image\/png;base64,/, "");
+      base64Data  +=  base64Data.replace('+', ' ');
+      binaryData  =   new Buffer(base64Data, 'base64').toString('binary');
+      
+      fs.writeFile(`./images/${req.body.imageUrl}`, binaryData, "binary", function (err) {
+          console.log(err); // writes out file without error, but it's not a valid image
+      });*/
+
+
+      /*const url = 'data:image/png;base6....';
+      fetch(req.body.file)
+        .then(res => res.blob())
+        .then(blob => {
+          const file = new File([blob], `./images/${req.body.imageUrl}`,{ type: "image/png" })
+        })*/
+
+
+
+      /*let base64Image = req.body.file.replace(/^data:image\/png;base64,/, "");
+      let buff = Buffer.from(base64Image, 'base64');
+      fs.writeFileSync(`./images/${req.body.imageUrl}`, buff);*/
+      /*fs.writeFile(`./images/${req.body.imageUrl}`, base64Image, 'base64', function(err) {
+        console.log('File created');
+    });*/
       //On enregistre notre objet dans la base de donnée
       post.save()
       .then(() => res.status(201).json({message : 'Publication enregistrée'}))
@@ -147,7 +184,7 @@ exports.deletePost = (req, res, next) => {
   
   };
   
-//On créer et exporte le controller nous permettant de gérer les likes et unliked de notre base de donnée
+//On créer et exporte le controller nous permettant de gérer les likes de notre base de donnée
 exports.like = (req, res, next) => {
     let like = req.body.like;
     const userId = req.body.userId;
@@ -155,11 +192,8 @@ exports.like = (req, res, next) => {
     let dislike = req.body.dislike;
     const usersLiked = req.body.usersLiked;
     const usersDisliked = req.body.usersDisliked;
-  /*  console.log("Id de l'object: ", req.body.postId)
-console.log("tableau likes", usersLiked)
-console.log("id", userId)
-console.log("id dans le tableau", usersLiked.includes(userId))*/
 
+  //Si  l'utilisateur appuis sur j'aime mais à déja liké
     if (usersLiked.includes(userId)) {
       Post.findOne({_id: req.params.id})
         .then((post) => {
@@ -170,19 +204,19 @@ console.log("id dans le tableau", usersLiked.includes(userId))*/
               userId: req.body.userId
             }
           )
-          
           post.like = post.like - 1;
           post.usersLiked.pull(req.body.userId);
           like = like - 1;
           delete usersLiked[req.body.userId];
+
           post.save()
           .then(() => res.status(200).json({message: "publication déjà liké et unliké"}))
           .catch((error) => res.status(400).json({ error }))
-        })
-       
+        }) 
       .catch(error => res.status(400).json({ error }));
-
+    //Si il appuis sur j'aime sans avoir liké avant
     } else {
+      //Soit il a déjà mis un je n'aime pas
       if (usersDisliked.includes(userId)) {
         Post.findOne({_id: req.params.id})
           .then((post) => {
@@ -207,7 +241,7 @@ console.log("id dans le tableau", usersLiked.includes(userId))*/
             .catch((error) => res.status(400).json({ error }))
           })
           .catch(error => res.status(400).json({ error }));
-
+      //soit, il n'a ni mis j'aime ni mis je n'aime pas
       } else {
         Post.findOne({_id: req.params.id})
           .then((post) => {
@@ -232,6 +266,7 @@ console.log("id dans le tableau", usersLiked.includes(userId))*/
     }
 };
 
+//On créer et exporte le controller nous permettant de gérer les likes de notre base de donnée
 exports.dislike = (req, res, next) => {
   let like = req.body.like;
   const userId = req.body.userId;
@@ -240,6 +275,7 @@ exports.dislike = (req, res, next) => {
   const usersLiked = req.body.usersLiked;
   const usersDisliked = req.body.usersDisliked;
 
+//Si l'utilisateur a déja mis un je n'aime pas
   if (usersDisliked.includes(userId)) {
     Post.findOne({_id: req.params.id})
       .then((post) => {
@@ -254,13 +290,15 @@ exports.dislike = (req, res, next) => {
         post.usersDisliked.pull(req.body.userId);
         dislike = dislike - 1;
         delete usersDisliked[req.body.userId];
+
         post.save()
         .then(() => res.status(200).json({message: "publication déjà unliké"}))
         .catch((error) => res.status(400).json({ error }))
       })
      .catch(() => res.status(400).json( "publication déjà disliké"))
-
+  //Si l'utilisateur n'a pas mis un je n'aime pas
   } else {
+    // Si l'utilisateur n'a pas mis un je n'aime pas, mais à mis un j'aime 
     if (usersLiked.includes(userId)) {
       Post.findOne({_id: req.params.id})
         .then((post) => {
@@ -285,7 +323,7 @@ exports.dislike = (req, res, next) => {
           .catch((error) => res.status(400).json({ error }))
         })
         .catch(error => res.status(400).json({ error }));
-
+    //Si l'utilisateur n'a mis ni j'aime ni je n'aime pas
     } else {
       Post.findOne({_id: req.params.id})
         .then((post) => {
@@ -309,53 +347,3 @@ exports.dislike = (req, res, next) => {
     }
   }
 };   
-    /* //condition quand on met un like
-    if (like === 1) {
-     Post.updateOne(
-       { _id: postId},
-       {   $push: {usersLiked: userId},
-           $inc: {like: +1},
-       })
-       .then(() => res.status(200).json({message: "j'aime ajouté"}))
-       .catch((error) => res.status(400).json({ error }))
-    };
- 
-    //condition quand on met un dislike
-    if (like === -1) {
-     Post.updateOne(
-       { _id: postId},
-       {   $push: { usersDisliked: userId},
-           $inc: { dislike: +1} 
-       })
-       .then(() => res.status(200).json({message: "je n'aime pas ajouté"}))
-       .catch((error) => res.status(400).json({ error }))
-    };
-    
-    //condition quand on annule un like ou dislike
-    if (like === 0) {
-     Post.findOne(
-       { _id: postId})
-       .then((post) => {
-         //Si on veut annuler un like
-         if (post.usersLiked.includes(userId)) {
-           Post.updateOne(
-             { _id: postId},
-             {   $pull: { usersLiked: userId},
-                 $inc: { like: -1} 
-             })
-             .then(() => res.status(200).json({message: "mention j'aime supprimé"}))
-             .catch((error) => res.status(400).json({ error }))
-         };
-         //Si il s'agit d'un dislike
-         if (post.usersDisliked.includes(userId)) {
-           Post.updateOne(
-             { _id: postId},
-             {   $pull: { usersDisliked: userId},
-                 $inc: { dislike: -1} 
-             })
-             .then(() => res.status(200).json({message: "mention je n'aime pas supprimé"}))
-             .catch((error) => res.status(400).json({ error }))
-         }
-       })
-       .catch((error) => res.status(400).json({ error }))
-    }*/

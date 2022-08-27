@@ -79,6 +79,7 @@ const DivNavLink = styled.div`
 
 function Header() {
 
+  //Je récupère l'id de l'utilisateur pour savoir s'il est connecté ou non et changer son message d'accueil en fonction
   const uId = useContext(UserIdContext);
   let userId = ""
   
@@ -125,7 +126,6 @@ function Header() {
                 <TitleWelcome>se connecter</TitleWelcome>
               </NavLink>
             </ListWelcome>
-            
           </AllListWelcome>
         )}
     </NavContainer>
