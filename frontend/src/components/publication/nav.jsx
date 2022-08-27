@@ -1,7 +1,6 @@
 import { useState} from 'react';
 import styled from 'styled-components';
 import colors from '../../utils/styles/colors';
-
 import { Button } from '../../utils/styles/atoms';
 import { useFetch } from "../../utils/hooks";
 import axios from "axios";
@@ -13,6 +12,7 @@ const DivAllPage = styled.div`
     flex-direction: column;
     align-items: center;
     width: 20%;
+    max-height: 500px;
     border: 1px solid black;
     background: linear-gradient(220deg, ${colors.secondary} 40%, ${colors.primaryBis});
     border-radius: 15px;
@@ -22,53 +22,6 @@ const DivAllPage = styled.div`
         
       }
 `
-//Style quand le profil est ouvert
-  /*  //style pour la barre de recherche
-    const DivResearch = styled.div`
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        border-radius: 20px;
-        margin: 10px;
-        margin-top: 25px;
-        padding:15px;
-    `
-    const DivInputButtonResearch = styled.div`
-        width: 100%;
-    `
-    const InputResearch = styled.input`
-        border-radius: 10px 0px 0px 10px;
-        background-color: ${colors.secondary};
-        height: 35px;
-        width: 80%;
-        margin-top: 25px;
-        border: 1px solid black;
-        &:hover {
-            background-color: ${colors.colorHover};
-        }
-        &:focus {
-            background-color: white;
-        }        
-    `
-    const ButtonResearch = styled.button`
-        border-radius: 0px 10px 10px 0px;
-        background-color: ${colors.secondary};
-        height: 35px;
-        width: 20%;
-        margin-top: 10px;
-        border: 1px solid black;
-    `
-    const ButtonDelete = styled.button`
-    border-radius: 10px;
-    background: linear-gradient(0deg, ${colors.secondary} 30%, ${colors.primary});
-    height: 20px;
-    width: 45%;
-    margin-top: 50px;
-    border: none;
-    &:hover {
-        background: ${colors.primary};
-    } 
-    `*/
     //style pour le profil quand il est ouvert
     const ProfilNav = styled.div`
         display: flex;
@@ -128,6 +81,7 @@ const ImageProfil = styled.img`
 function DisplayProfil() {
     const [isOpen, setIsOpen] = useState(false)
     const user = JSON.parse(localStorage.getItem("userInfo"))
+    
     const { data, error } = useFetch(
         `${process.env.REACT_APP_API_URL}api/auth/${user.userId}`
       )
@@ -135,8 +89,10 @@ function DisplayProfil() {
         return <span>Il y a un problème</span>
       }
       if (data.admin) {localStorage.setItem("userAdmin", JSON.stringify(data.admin))}
+      
     //Modifier son profil 
     const updateOneUser =  () => {
+        localStorage.setItem("profilImageUrl", JSON.stringify(data.imageUrl))
         window.location.href = "http://localhost:3000/modifyProfil";
     }
      
@@ -146,14 +102,6 @@ function DisplayProfil() {
         window.location.href = "http://localhost:3000/";
         localStorage.clear();
       }
-
-    /*  //supprimer son compte 
-      const deleteAccount = () => {
-        if (!window.confirm(`Voulez-vous vraiment désactiver le compte ?`)) return;
-        axios.get(`http://localhost:4200/api/auth/deleteAccount/${user.userId}`);
-        window.location.href = "http://localhost:3000/";
-        localStorage.clear();
-      };*/
 
     return isOpen ? (
             <DivAllPage className="publication-page">                          

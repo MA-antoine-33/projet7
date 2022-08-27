@@ -56,6 +56,7 @@ const FormInputButton = styled.input`
 
 
 const ModifyProfil = () => {
+    //On récupére nos données utilisateurs pour pouvoir le modifier
     const [userName, setUserName] = useState('');
     const [imageUrl, setImageUrl] = useState('');
     let userId = ""
@@ -72,19 +73,34 @@ const ModifyProfil = () => {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       }
+
+    //On créer une fonction pour stocker les convertir les images en 64bytes et pouvoir les retraduire dans le back
+    const test64 = (e) => {
+        const reader = new FileReader();
+        reader.addEventListener("load", () => {
+            localStorage.setItem("recentProfilImage", reader.result);
+        }, false)
+        const fileImage = document.getElementById('imageUrlModifyForm').files[0];
+        reader.readAsDataURL(fileImage);
+    };
+
+
     const updateOneUser = async (e) => {
         e.preventDefault();
              
         const userNameError = document.querySelector(".userNameError");
         const imageUrlError = document.querySelector(".imageUrlError");
-        
+        const recentImage = localStorage.getItem("recentProfilImage")
+        const fileImage = document.getElementById('imageUrlModifyForm').files[0];
         await axios({
             method: "put",
             url: `${process.env.REACT_APP_API_URL}api/auth/${userId}`,
             data: {
                 userName: userName,
-                imageUrl: imageUrl,
-                email: data.email
+                imageUrl: fileImage.name,
+                email: data.email,
+                file: recentImage,
+                typeFile: fileImage.type,
             },
             headers: headers
         })
@@ -93,6 +109,8 @@ const ModifyProfil = () => {
                 userNameError.innerHTML = res.data.errors.userName;
                 imageUrlError.innerHTML = res.data.errors.imageUrl;
             } else {
+                localStorage.removeItem("profilImageUrl")
+                localStorage.removeItem("recentprofilImage")
                 window.location.href = "http://localhost:3000/publication";
             }
         })
@@ -109,8 +127,7 @@ const ModifyProfil = () => {
                         <div className="userNameError"></div>
                     </FormOneDiv>
                     <FormOneDiv>
-                        <FormLabel htmlFor="imageUrlModifyForm">Insérer l'url de votre image</FormLabel>
-                        <FormInput type="texe" id="imageUrlModifyForm" name="imageUrlModifyForm" onChange={(e) => setImageUrl(e.target.value)} placeholder=" http://..." value={imageUrl}/>
+                        <FormInput id="imageUrlModifyForm" type='file' accept="image/*" onChange={(e) => {test64(); setImageUrl(e.target.value)}}  value={imageUrl}/>
                         <div className="imageUrlError"></div>
                     </FormOneDiv>                  
                     <FormOneDiv>

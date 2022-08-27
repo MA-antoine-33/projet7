@@ -87,15 +87,12 @@ const NewPost = () => {
       };
       const userId = user.userId
 
-//test image**********************************************************************************************************
+    //On créer une fonction pour stocker les convertir les images en 64bytes et pouvoir les retraduire dans le back
       const test64 = (e) => {
         const reader = new FileReader();
-
         reader.addEventListener("load", () => {
-            console.log(reader.result)
             localStorage.setItem("recentImage", reader.result);
         }, false)
-        
         const fileImage = document.getElementById('ImageNewPost').files[0];
         reader.readAsDataURL(fileImage);
        };
@@ -103,25 +100,22 @@ const NewPost = () => {
   
     //On créer la fonction qui va appeler l'API pour créer une publication
     const publishNewPost = (e) => {
-        //e.preventDefault();
+        e.preventDefault();
         const descriptionError = document.querySelector(".descriptionError");
         const imageUrlError = document.querySelector(".imageUrlError");
         const userName = data.userName;
         const recentImage = localStorage.getItem("recentImage")
-       
         const fileImage = document.getElementById('ImageNewPost').files[0];
-       
-       // console.log("Le fichier : ", fileImage)
-        //console.log(fileImage.name)
-        //localStorage.removeItem("fileLocalImage");
-        //localStorage.setItem("fileLocalImage", JSON.stringify(fileImage))
-        
-        //const localStorageImage = JSON.parse(localStorage.getItem("fileLocalImage"))
-        
-        //console.log("Mon local storage avec le fichier: ", localStorageImage)
-        //console.log("valeur de imageUrl", imageUrl)
-        //console.log(fileImage.name)
-        console.log(fileImage)
+        let imageToAdd = "";
+        let typeFileToAdd = "";
+        if (fileImage === undefined || fileImage === null){
+            imageToAdd = "";
+            typeFileToAdd = "";
+        } else {
+            imageToAdd = fileImage.name
+            typeFileToAdd = fileImage.type
+        }
+
         axios({
             method: "post",
             url: `${process.env.REACT_APP_API_URL}api/publication/create`,
@@ -129,10 +123,10 @@ const NewPost = () => {
                 userName,
                 userId,
                 description,
-                imageUrl: fileImage.name,
+                imageUrl: imageToAdd,
                 date: dateDay,
                 file: recentImage,
-                typeFile: fileImage.type,
+                typeFile: typeFileToAdd,
             },
             headers: headers
         })  
@@ -142,9 +136,8 @@ const NewPost = () => {
                     imageUrlError.innerHTML = res.data.errors.imageURL;
                 } else {
                     setValidationPost(true)
-                    console.log("les datas envoyées", data.file)
-                    
-                    //window.location.reload()
+                    localStorage.removeItem("recentImage")
+                    window.location.reload()
                 }
             })
             .catch((err) => {console.log(err)})}

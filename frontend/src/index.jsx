@@ -17,8 +17,3 @@ root.render(
     </Router>
   </React.StrictMode>,
 )
-/*<Router>Route exact path="/" element={<Home />}></Route>
-          <Route path="/survey/:questionNumber" element={<Survey />}></Route>
-          <Route path="/results" element={<Results />}></Route>
-          <Route path="/freelances" element={<Freelances />}></Route>
-          <Route element={<Error />}> </Route>*/
