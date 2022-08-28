@@ -11,7 +11,7 @@ import { useFetch } from "./utils/hooks";
 import { UserIdContext } from "./components/appContext";
 import ModifyPost from "./components/post/modifyPost";
 
-
+//On créer nos routes pour nos différentes pages
 const App = () => {
     let userId = ""
   
@@ -21,8 +21,7 @@ const App = () => {
   }
   const { data, error } = useFetch(
     `${process.env.REACT_APP_API_URL}api/auth/${userId}`
-  )
-    
+  )  
       // eslint-disable-next-line no-unused-vars
       const userList = data?.userList
     

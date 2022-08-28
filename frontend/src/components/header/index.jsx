@@ -90,6 +90,7 @@ function Header() {
   const { data, error } = useFetch(
     `${process.env.REACT_APP_API_URL}api/auth/${userId}`
   )
+  //Je rajoute la fonction pour pouvoir se déconnecter
   const logoutHandler = async () => {
         await axios.get(`${process.env.REACT_APP_API_URL}api/auth/logout`);
         window.location.href = "http://localhost:3000/";

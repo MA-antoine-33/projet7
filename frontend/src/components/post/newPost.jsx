@@ -17,19 +17,18 @@ const DivAllPage = styled.div`
 const NewPostDiv = styled.div`
     display: flex;
     border-bottom: 1px solid black;
-    border-radius: 20px;
+    border-radius: 10px;
     height: 100%;
     background-color: ${colors.tertiaryBis};
 `
     //style pour la partie contenue de la nouvelle publication
     const TextContentNewPost = styled.textarea`
         font-size: 1.1em;
-        height: 80%;
+        height: 98%;
         width: 60%;
-        border: 0.3em ridge ${colors.secondary};
-        border-radius: 10px;
+        border-radius: 10px 0px 0px 10px;
         background-color: ${colors.tertiaryBis};
-        padding: 7px;
+        padding: 0px;
         `
     //Style pour la partie publier et ajouter une image de la partie de la nouvelle publication
     const DivButtonNewPost = styled.div`
@@ -45,6 +44,7 @@ const NewPostDiv = styled.div`
         border-radius: 10px;
         background-color: ${colors.secondary};
         border: 1px solid black;
+        margin-top: 5px;
         &:hover {
             background-color: ${colors.colorHover};
         }
