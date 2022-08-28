@@ -34,6 +34,7 @@ const FormInput = styled.input`
     background-color: ${colors.secondary};
     height: 25px;
     border-radius: 15px;
+    padding:5px;
     &:hover {
         background-color: ${colors.colorHover};
     }
@@ -84,10 +85,9 @@ const ModifyProfil = () => {
         reader.readAsDataURL(fileImage);
     };
 
-
+    //On créer une fonction pour modifier notre profil quand on cliquera sur valider
     const updateOneUser = async (e) => {
-        e.preventDefault();
-             
+        e.preventDefault();             
         const userNameError = document.querySelector(".userNameError");
         const imageUrlError = document.querySelector(".imageUrlError");
         const recentImage = localStorage.getItem("recentProfilImage")

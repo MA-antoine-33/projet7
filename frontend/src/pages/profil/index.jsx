@@ -26,13 +26,12 @@ const Image = styled.div`
         }
     }
 `
-
 const DivAllPage = styled.div`
     display: flex;
     justify-content: center;
     margin: 108px;
+    height : 700px;
 `
-
 const DivGeneral = styled.div`
     display: flex;
     border: 1px solid black;
@@ -45,6 +44,7 @@ const DivGeneral = styled.div`
     `
 
 const Profil = () => {
+    //On regarde si l'utilisateur est déjà connecté ou non pour savoir quelle page afficher
     const uId = useContext(UserIdContext);
     
     return (

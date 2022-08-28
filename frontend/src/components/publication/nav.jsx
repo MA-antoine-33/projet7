@@ -81,7 +81,6 @@ const ImageProfil = styled.img`
 function DisplayProfil() {
     const [isOpen, setIsOpen] = useState(false)
     const user = JSON.parse(localStorage.getItem("userInfo"))
-    
     const { data, error } = useFetch(
         `${process.env.REACT_APP_API_URL}api/auth/${user.userId}`
       )
