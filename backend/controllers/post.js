@@ -3,7 +3,7 @@ const fs = require('fs');
 const User = require('../models/user');
 const jwt = require ('jsonwebtoken');
 const user = require('../models/user');
-const { post } = require('../routes/publication');
+
 
 //On créer et on exporte le controller nous permettant de voir un post en particulier e
 exports.getOnePost = (req, res, next) => {
