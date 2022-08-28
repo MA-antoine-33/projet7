@@ -1,5 +1,5 @@
 import React from "react";
-import Login from "../../components/log";
+import Login from "../../components/Log";
 import styled from 'styled-components';
 import colors from "../../utils/styles/colors";
 import { UserIdContext } from "../../components/appContext";
