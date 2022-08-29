@@ -37,7 +37,7 @@ const DivNavLink = styled.div`
     height: 80px;
     border-radius: 15px;
   `
-  const TitleHomePage = styled.h3`
+  const TitleHomePage = styled.h1`
     margin-left: 5px;
     font-size: 1em;
   ` 
@@ -57,7 +57,9 @@ const DivNavLink = styled.div`
   const ListWelcome = styled.li`
     text-decoration: none;
   `
-  const TitleWelcome = styled.h4`
+  const ListWelcomeH2 = styled.h2`
+  `
+  const TitleWelcome = styled.h2`
     margin-rigth: 5px;
     font-size: 1em;
     color: black;
@@ -117,7 +119,9 @@ function Header() {
               </NavLink>
             </ListWelcome>
             <ListWelcome onClick={logoutHandler}>
-              <ImageLogout src="./logout.png" alt="Par ici la sortie" />
+              <ListWelcomeH2>
+                <ImageLogout src="./logout.png" alt="Par ici la sortie" />
+              </ListWelcomeH2>
             </ListWelcome>
           </AllListWelcome>
         ) : (

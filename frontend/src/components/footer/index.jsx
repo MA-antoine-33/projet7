@@ -19,7 +19,7 @@ const FooterContainer = styled.footer`
     padding-top: 0px;
   }
 `
-const LogoutDiv = styled.div`
+const LogoutDiv = styled.h2`
   display: flex;
   align-items: center;
 `
@@ -47,7 +47,7 @@ const DivNavLink = styled.div`
     height: 80px;
     border-radius: 15px;
   `
-  const TitleHomePage = styled.h3`
+  const TitleHomePage = styled.h1`
     margin-left: 5px;
     font-size: 1em;
   ` 

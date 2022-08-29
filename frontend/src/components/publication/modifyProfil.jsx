@@ -59,7 +59,7 @@ const FormInputButton = styled.input`
 const ModifyProfil = () => {
     //On récupére nos données utilisateurs pour pouvoir le modifier
     const [userName, setUserName] = useState('');
-    const [imageUrl, setImageUrl] = useState('');
+    let [imageUrl, setImageUrl] = useState('');
     let userId = ""
     
     const user = JSON.parse(localStorage.getItem("userInfo"))
@@ -92,15 +92,24 @@ const ModifyProfil = () => {
         const imageUrlError = document.querySelector(".imageUrlError");
         const recentImage = localStorage.getItem("recentProfilImage")
         const fileImage = document.getElementById('imageUrlModifyForm').files[0];
+        let imageUrlToAdd = "";
+        let typeFileToAdd = "";
+        if (imageUrl === "" || imageUrl === null || imageUrl === undefined) {
+            imageUrlToAdd = "";
+            typeFileToAdd = "";
+        } else {
+            imageUrlToAdd = fileImage.name;
+            typeFileToAdd = fileImage.type;
+        }
         await axios({
             method: "put",
             url: `${process.env.REACT_APP_API_URL}api/auth/${userId}`,
             data: {
                 userName: userName,
-                imageUrl: fileImage.name,
+                imageUrl: imageUrlToAdd,
                 email: data.email,
                 file: recentImage,
-                typeFile: fileImage.type,
+                typeFile: typeFileToAdd,
             },
             headers: headers
         })

@@ -55,39 +55,61 @@ exports.createPost = (req, res, next) => {
 exports.updatePost = (req, res, next) => {
 
   const dateAndImageName = `${Date.now()}${req.body.imageUrl}`;
+ 
   //On convertie notre image de la base64 en fichier lisible par notre serveur
-  if (req.body.file === undefined || req.body.file === null){
-  } else {
-  //On convertie notre image de la base64 en fichier lisible par notre serveur
-  let base64Image = req.body.file.replace(`data:${req.body.typeFile};base64,`, "");
-  let buff = Buffer.from(base64Image, 'base64');
-  fs.writeFileSync(`./images/${dateAndImageName}`, buff);}
-  
+  if ( req.body.file === undefined || req.body.file === null){
 
-  const postObjet = req.file ? {
-    ...JSON.parse(req.body.post),
+  } else {
+    //On convertie notre image de la base64 en fichier lisible par notre serveur
+    let base64Image = req.body.file.replace(`data:${req.body.typeFile};base64,`, "");
+    let buff = Buffer.from(base64Image, 'base64');
+    fs.writeFileSync(`./images/${dateAndImageName}`, buff);
+  }
+  //On commence par regarder si il ya un champs file dans notre requete
+  const postObjet = req.body.file ? {
+    //Si c'est le cas, on recréer l'url de l'image
+    ...req.body, 
     imageUrl: req.body.imageUrl ?  `${req.protocol}://${req.get('host')}/images/${dateAndImageName}`: "",
     
-  } : {...req.body};  
-  
+  } : {...req.body};  //Sinon on récupère l'objet directement dans le corps de la requète
+  //On regarde si le user est un admin ou non 
       if (Post.findOne({admin: true})) {
+        //On identifie li post à modifier
         Post.findOne({_id: req.params.id})
         .then((post) => {
+          if ( req.body.file === undefined || req.body.file === null){
+            delete postObjet.imageUrl;
+            Post.updateOne({ _id: req.params.id}, {...postObjet, _id: req.params.id})
+            .then(() => res.status(200).json({ message: 'Publication modifiée'}))
+            .catch(error => res.status(401).json({ error}));
+          } else {
             Post.updateOne({ _id: req.params.id}, {...postObjet, _id: req.params.id, imageUrl: req.body.imageUrl ?  `${req.protocol}://${req.get('host')}/images/${dateAndImageName}`: ""})
             .then(() => res.status(200).json({ message: 'Publication modifiée'}))
             .catch(error => res.status(401).json({ error}));
           }
+        }
       )
       .catch(error => res.status(400).json({ error }));
+      //Si il n'est pas admin
       }else{
       //ensuite on cherche notre objet dans la base deonnée pour vérifier que ce soit bien l'utilisateur qui a créer l'objet qui veut le modifier
       Post.findOne({_id: req.params.id})
       .then((post) => {
         if (req.params.admin === true) {
-          Post.updateOne({ _id: req.params.id}, {...postObjet, _id: req.params.id, imageUrl: req.body.imageUrl ?  `${req.protocol}://${req.get('host')}/images/${dateAndImageName}`: ""})
-          .then(() => res.status(200).json({ message: 'Publication modifiée'}))
-          .catch(error => res.status(401).json({ error}));
+
+          if ( req.body.file === undefined || req.body.file === null){
+            delete postObjet.imageUrl;
+            Post.updateOne({ _id: req.params.id}, {...postObjet, _id: req.params.id})
+            .then(() => res.status(200).json({ message: 'Publication modifiée'}))
+            .catch(error => res.status(401).json({ error}));
+          } else {
+            Post.updateOne({ _id: req.params.id}, {...postObjet, _id: req.params.id, imageUrl: req.body.imageUrl ?  `${req.protocol}://${req.get('host')}/images/${dateAndImageName}`: ""})
+            .then(() => res.status(200).json({ message: 'Publication modifiée'}))
+            .catch(error => res.status(401).json({ error}));
+          }
+          
         } else {
+
         //si ce n'est pas le même utilisateur alors message disant que la personne n'est pas autorisé
         if (post.userId != req.auth.userId) {
           req.status(401).json({ message : 'Non-autorisé'});
@@ -96,7 +118,8 @@ exports.updatePost = (req, res, next) => {
           Post.updateOne({ _id: req.params.id}, {...postObjet, _id: req.params.id})
           .then(() => res.status(200).json({ message: 'Publication modifiée'}))
           .catch(error => res.status(401).json({ error}));
-        };}
+        };
+      }
       })
       .catch(error => res.status(400).json({ error }));
     }
@@ -133,7 +156,6 @@ exports.deletePost = (req, res, next) => {
             fs.unlink(`images/${filename}`, () => {
                 Post.deleteOne({_id: req.params.id})
                 .then(() => res.status(200).json({ message: 'Publication supprimée'}))
-                .then(() => {console.log("filename")})
                 .catch(error => res.status(401).json({ error}));
           });
         };
