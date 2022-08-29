@@ -16,29 +16,40 @@ exports.updateOneUser = (req, res, next) => {
     .then((user) => {
       const dateAndImageName = `${Date.now()}${req.body.imageUrl}`;
       //On convertie notre image de la base64 en fichier lisible par notre serveur
+     
       if (req.body.file === undefined || req.body.file === null){
+
       } else {
-      //On convertie notre image de la base64 en fichier lisible par notre serveur
-      let base64Image = req.body.file.replace(`data:${req.body.typeFile};base64,`, "");
+        //On convertie notre image de la base64 en fichier lisible par notre serveur
+        let base64Image = req.body.file.replace(`data:${req.body.typeFile};base64,`, "");
+        let buff = Buffer.from(base64Image, 'base64');
+        fs.writeFileSync(`./images/${dateAndImageName}`, buff);
+      }
     
-      let buff = Buffer.from(base64Image, 'base64');
-      fs.writeFileSync(`./images/${dateAndImageName}`, buff);}
-      console.log()
       //On commence par regarder si il ya un champs file dans notre requete
-      const userProfil = req.file ? {
-          //Si c'est le cas, on parse notre chaine de caractère et on recréer l'url de l'image
-          ...JSON.parse(req.body.post),
+      const userProfil = req.body.file ? {
+          //Si c'est le cas, on recréer l'url de l'image
+          ...req.body,
+
           imageUrl: req.body.imageUrl ?  `${req.protocol}://${req.get('host')}/images/${dateAndImageName}`: "",
         } : {...req.body};  //Sinon on récupère l'objet directement dans le corps de la requète
         //ensuite on supprime le userId venant de la requete pour éviter que quelqu'un créer un objet a son puis le modifie pour le reassigner à une autre personne
         delete userProfil._userId;
-         
+        
           if (req.body.userName === ""){
-            user.userName = user.userName,
-            user.imageUrl = req.body.imageUrl ? `${req.protocol}://${req.get('host')}/images/${dateAndImageName}`: ""
+            user.userName = user.userName;
+            if ( req.body.file === undefined || req.body.file === null){ 
+              delete postObjet.imageUrl;
+            } else {
+              user.imageUrl = req.body.imageUrl ? `${req.protocol}://${req.get('host')}/images/${dateAndImageName}`: ""
+            }
           } else {
-            user.userName = req.body.userName,
-            user.imageUrl = req.body.imageUrl ?  `${req.protocol}://${req.get('host')}/images/${dateAndImageName}`: ""
+            user.userName = req.body.userName;
+            if ( req.body.file === undefined || req.body.file === null){ 
+              delete postObjet.imageUrl;
+            } else {
+              user.imageUrl = req.body.imageUrl ? `${req.protocol}://${req.get('host')}/images/${dateAndImageName}`: user.imageUrl
+            }
           }
           
         user.save()

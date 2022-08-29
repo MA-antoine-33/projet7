@@ -91,7 +91,6 @@ const ModifyPost = () => {
       }
     //On récupère les données de l'utilisateur  
     const postIdStorage = JSON.parse(localStorage.getItem("postId"));
-   // const postImageUrlStorage = JSON.parse(localStorage.getItem("postImageUrl"));
     const postDescriptionStorage = JSON.parse(localStorage.getItem("postDescription"));
  
     //On créer une fonction pour stocker les convertir les images en 64bytes et pouvoir les retraduire dans le back
