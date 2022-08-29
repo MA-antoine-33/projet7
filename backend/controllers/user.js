@@ -46,15 +46,10 @@ exports.updateOneUser = (req, res, next) => {
           } else {
             user.userName = req.body.userName;
             if ( req.body.file === undefined || req.body.file === null){ 
-              console.log("deletimageUrl");
-        
               delete postObjet.imageUrl;
             } else {
-              console.log("imageUrl");
-             console.log("tes",req.body.imageUrl)
               user.imageUrl = req.body.imageUrl ? `${req.protocol}://${req.get('host')}/images/${dateAndImageName}`: user.imageUrl
             }
-         
           }
           
         user.save()
